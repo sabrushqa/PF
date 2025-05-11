@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Offres disponibles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066CC;
+            --primary-light: #4D94FF;
+            --primary-dark: #004C99;
+            --accent: #FF7A00;
+            --accent-light: #FFA64D;
+            --accent-dark: #CC6200;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-800: #343a40;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            color: var(--gray-800);
+            line-height: 1.5;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-form {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-300);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .offer-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            border-color: var(--primary-light);
+        }
+
+        .offer-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+        }
+
+        .offer-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .offer-company {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .offer-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .offer-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--gray-800);
+        }
+
+        .offer-detail i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .badge-primary {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .badge-accent {
+            background: var(--accent-light);
+            color: white;
+        }
+
+        .offer-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--gray-100);
+        }
+
+        .offer-date {
+            font-size: 0.875rem;
+            color: var(--gray-800);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-300);
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-briefcase-fill"></i> Offres disponibles</h1>
+        <a th:href="@{/candidat/home}" class="btn btn-accent">
+            <i class="bi bi-house-fill"></i>
+            Accueil
+        </a>
+    </div>
+
+    <form th:action="@{/candidat/offres/recherche}" method="get" class="search-form">
+        <div class="input-group">
+            <i class="bi bi-building"></i>
+            <input type="text" name="secteur" placeholder="Secteur d'activité" />
+        </div>
+        <div class="input-group">
+            <i class="bi bi-file-text"></i>
+            <input type="text" name="typeContrat" placeholder="Type de contrat" />
+        </div>
+        <div class="input-group">
+            <i class="bi bi-geo-alt"></i>
+            <input type="text" name="lieu" placeholder="Localisation" />
+        </div>
+        <div class="input-group">
+            <i class="bi bi-building"></i>
+            <input type="text" name="entreprise" placeholder="Nom de l'entreprise" />
+        </div>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i>
+            Rechercher
+        </button>
+    </form>
+
+    <div class="offers-grid">
+        <div th:if="${#lists.isEmpty(offres)}" class="empty-state">
+            <i class="bi bi-search"></i>
+            Aucune offre ne correspond à vos critères
+        </div>
+
+        <div th:each="offre : ${offres}" class="offer-card">
+            <div class="offer-header">
+                <h3 class="offer-title" th:text="${offre.titre}">Titre</h3>
+                <div class="offer-company" th:text="${offre.recruteur != null ? offre.recruteur.entreprise : 'N/A'}">
+                    Entreprise
+                </div>
+            </div>
+
+            <div class="offer-body">
+                <div class="offer-detail">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <span th:text="${offre.lieu}">Lieu</span>
+                </div>
+
+                <div class="offer-detail">
+                    <i class="bi bi-briefcase-fill"></i>
+                    <span class="badge badge-accent" th:text="${offre.typeContrat}">Type</span>
+                </div>
+
+                <div class="offer-detail">
+                    <i class="bi bi-building-fill"></i>
+                    <span th:text="${offre.secteur}">Secteur</span>
+                </div>
+
+                <div class="offer-detail">
+                    <i class="bi bi-person-workspace"></i>
+                    <span th:text="${offre.niveauExperience}">Expérience</span>
+                </div>
+            </div>
+
+            <div class="offer-footer">
+                <div class="offer-date">
+                    <i class="bi bi-calendar3"></i>
+                    Publié le <span th:text="${#temporals.format(offre.datePublication, 'dd/MM/yyyy')}">Date</span>
+                </div>
+                <!-- Lien pour voir les détails de l'offre -->
+                <a th:href="@{/offres/{id}(id=${offre.id})}" class="btn btn-primary">
+                    <i class="bi bi-arrow-right"></i>
+                    Voir détails
+                </a>
+                <form th:action="@{/candidat/favoris/ajouter/{id}(id=${offre.id})}" method="post" style="display:inline;">
+                    <button type="submit">❤️ Ajouter aux favoris</button>
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

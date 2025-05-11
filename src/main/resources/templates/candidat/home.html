@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Accueil Candidat</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0066CC;
+      --primary-light: #4D94FF;
+      --primary-dark: #004C99;
+      --accent: #FF7A00;
+      --accent-light: #FFA64D;
+      --accent-dark: #CC6200;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-800: #343a40;
+      --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      --radius: 12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      color: var(--gray-800);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .profile-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 2rem;
+      border: 1px solid var(--gray-200);
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+      padding: 2rem;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: white;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-name {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: var(--gray-100);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .profile-details {
+      padding: 1.5rem;
+    }
+
+    .detail-group {
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.5s ease-out;
+      display: none;
+    }
+
+    .detail-group.visible {
+      display: block;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: var(--gray-100);
+      margin-bottom: 0.75rem;
+    }
+
+    .detail-item i {
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--gray-800);
+      min-width: 120px;
+    }
+
+    .detail-value {
+      color: var(--gray-800);
+      flex: 1;
+    }
+
+    .profile-footer {
+      padding: 1.5rem;
+      background: var(--gray-100);
+      border-top: 1px solid var(--gray-200);
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .profile-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <i class="bi bi-person-fill"></i>
+      </div>
+      <h1 class="profile-name">
+        <span th:text="${candidat.prenom}">Prénom</span>
+        <span th:text="${candidat.nom}">Nom</span>
+      </h1>
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn btn-primary" onclick="toggleProfil()">
+        <i class="bi bi-person-vcard-fill"></i>
+        Mon Profil
+      </button>
+      <a th:href="@{/candidat/offres}" class="btn btn-accent">
+        <i class="bi bi-search"></i>
+        Voir les offres
+      </a>
+      <a href="/candidat/profil" class="btn btn-outline-primary">
+        Mon Profil
+      </a>
+
+
+
+
+
+
+      <a th:href="@{/candidat/entretiens}">
+        <button>Voir mes entretiens</button>
+      </a>
+      <a th:href="@{/candidat/favoris}" class="btn btn-outline-primary">
+        ⭐ Mes favoris
+      </a>
+      <div style="text-align: center; margin-top: 20px;">
+        <a th:href="@{/candidat/recommandation(candidatId=${candidat.id})}" class="btn">Voir les recommandations</a>
+
+
+      </div>
+
+
+
+
+      <form th:action="@{/logout}" method="post" style="display: contents;">
+        <button type="submit" class="btn btn-outline">
+          <i class="bi bi-box-arrow-right"></i>
+          Se déconnecter
+        </button>
+      </form>
+    </div>
+
+    <div class="profile-details">
+      <div id="profilDetails" class="detail-group">
+        <div class="detail-item">
+          <i class="bi bi-envelope-fill"></i>
+          <span class="detail-label">Email</span>
+          <span class="detail-value" th:text="${candidat.user.email}">email@example.com</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-telephone-fill"></i>
+          <span class="detail-label">Téléphone</span>
+          <span class="detail-value" th:text="${candidat.telephone}">0600000000</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-geo-alt-fill"></i>
+          <span class="detail-label">Adresse</span>
+          <span class="detail-value" th:text="${candidat.adresse}">Adresse</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-mortarboard-fill"></i>
+          <span class="detail-label">Formation</span>
+          <span class="detail-value" th:text="${candidat.formation}">Formation</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-award-fill"></i>
+          <span class="detail-label">Diplôme</span>
+          <span class="detail-value" th:text="${candidat.diplome}">Diplôme</span>
+        </div>
+        <div class="detail-item">
+          <i class="bi bi-briefcase-fill"></i>
+          <span class="detail-label">Spécialité</span>
+          <span class="detail-value" th:text="${candidat.specialite}">Spécialité</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleProfil() {
+    const details = document.getElementById("profilDetails");
+    details.classList.toggle("visible");
+  }
+</script>
+</body>
+</html>

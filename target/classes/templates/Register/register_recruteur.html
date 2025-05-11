@@ -1,0 +1,51 @@
+<!-- src/main/resources/templates/Template/Register/register_recruteur.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Inscription Recruteur</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h2>Inscription Recruteur</h2>
+
+<form th:action="@{/register/recruteur}" method="post" th:object="${recruteur}">
+
+    <!-- Informations personnelles -->
+    <label>Nom :</label>
+    <input type="text" th:field="*{nom}" required/><br/>
+
+    <label>Prénom :</label>
+    <input type="text" th:field="*{prenom}" required/><br/>
+
+    <label>Entreprise :</label>
+    <input type="text" th:field="*{entreprise}" required/><br/>
+
+    <label>Poste :</label>
+    <input type="text" th:field="*{poste}" required/><br/>
+
+    <label>Téléphone :</label>
+    <input type="text" th:field="*{telephone}" required/><br/>
+
+    <label>Site Web :</label>
+    <input type="url" th:field="*{siteWeb}"/><br/>
+
+    <label>Secteur d'activité :</label>
+    <input type="text" th:field="*{secteur}"/><br/>
+
+    <!-- Informations de connexion -->
+    <hr/>
+    <label>Email :</label>
+    <input type="email" th:field="*{user.email}" required/><br/>
+
+    <label>Mot de passe :</label>
+    <input type="password" th:field="*{user.password}" required/><br/>
+
+    <label>Confirmer mot de passe :</label>
+    <input type="password" th:field="*{confirmPassword}" required/><br/>
+
+    <button type="submit">S'inscrire</button>
+
+</form>
+
+</body>

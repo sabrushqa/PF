@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Recommandations d'Offres</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .offer-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        .offer-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 5px;
+        }
+        .offer-sector {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        .offer-description {
+            font-size: 14px;
+            color: #34495e;
+        }
+        .offer-score {
+            font-size: 14px;
+            color: #e74c3c;
+            text-align: right;
+        }
+        .message {
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            color: #721c24;
+        }
+        .debug-info {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Recommandations d'Offres pour le Candidat</h1>
+
+<!-- Afficher un message d'erreur s'il y en a un -->
+<div th:if="${error != null}" class="message">
+    <p th:text="${error}"></p>
+</div>
+
+<!-- Afficher un message si aucune offre n'est recommandée -->
+<div th:if="${message != null}" class="message">
+    <p th:text="${message}"></p>
+</div>
+
+<!-- Afficher les offres recommandées -->
+<div th:if="${offres != null and !offres.isEmpty()}">
+    <div th:each="offre : ${offres}" class="offer-card">
+        <div class="offer-title" th:text="${offre.titre}">Titre de l'offre</div>
+        <div class="offer-sector" th:text="'Secteur: ' + ${offre.secteur}">Secteur</div>
+        <div class="offer-description" th:text="${offre.description}">Description</div>
+        <div class="offer-score" th:text="'Score de correspondance: ' + ${#numbers.formatDecimal(offre.matchScore * 100, 0, 2)} + '%'">Score</div>
+    </div>
+</div>
+
+<!-- Si la liste des offres est vide -->
+<div th:if="${offres == null or offres.isEmpty()}" class="message">
+    <p>Aucune offre recommandée n'a été trouvée pour ce profil. Veuillez compléter votre profil ou réessayer plus tard.</p>
+</div>
+
+<!-- Informations de débogage (à retirer en production) -->
+<div class="debug-info">
+    <p>ID candidat: <span th:text="${candidatId}">-</span></p>
+    <p>Nombre d'offres: <span th:text="${offres != null ? offres.size() : 0}">0</span></p>
+</div>
+
+</body>
+</html>

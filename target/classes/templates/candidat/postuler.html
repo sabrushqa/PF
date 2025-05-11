@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postuler à l'Offre</title>
+    <!-- Ajouter votre fichier CSS ici pour le style -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Postuler à l'Offre : <span th:text="${offre.titre}"></span></h1>
+
+    <form th:action="@{/candidatures/postuler}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:name="offreId" th:value="${offre.id}"/>
+
+        <!-- Lettre de motivation -->
+        <div class="form-group">
+            <label for="lettreMotivation">Lettre de Motivation :</label>
+            <textarea name="lettreMotivation" id="lettreMotivation" rows="5" placeholder="Écrivez votre lettre de motivation ici..." required></textarea>
+        </div>
+
+        <!-- CV -->
+        <div class="form-group">
+            <label for="cv">Télécharger votre CV :</label>
+            <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx" required/>
+        </div>
+
+        <!-- Email du candidat -->
+        <div class="form-group">
+            <label for="emailCandidat">Votre Email :</label>
+            <input type="email" name="emailCandidat" id="emailCandidat" placeholder="Votre email" required/>
+        </div>
+
+        <!-- Bouton de soumission -->
+        <div class="form-group">
+            <button type="submit">Postuler</button>
+        </div>
+    </form>
+
+    <div class="back-link">
+        <a href="/offres">Retour aux Offres</a>
+    </div>
+</div>
+
+<!-- Optionnel: Ajouter des scripts JS ici -->
+<script src="/js/script.js"></script>
+</body>
+</html>

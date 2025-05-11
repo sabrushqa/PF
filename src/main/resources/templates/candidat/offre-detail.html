@@ -1,0 +1,13 @@
+<h2 th:text="${offre.titre}"></h2>
+<p><strong>Entreprise :</strong> <span th:text="${offre.recruteur.entreprise}"></span></p>
+<p><strong>Lieu :</strong> <span th:text="${offre.lieu}"></span></p>
+<p><strong>Secteur :</strong> <span th:text="${offre.secteur}"></span></p>
+<p><strong>Contrat :</strong> <span th:text="${offre.typeContrat}"></span></p>
+<p><strong>Niveau expérience :</strong> <span th:text="${offre.niveauExperience}"></span></p>
+<p><strong>Description :</strong> <span th:text="${offre.description}"></span></p>
+
+<hr>
+
+<h4>Postuler à cette offre</h4>
+<!-- Lien vers le formulaire de candidature -->
+<a th:href="@{/candidatures/postuler/{offreId}(offreId=${offre.id})}" class="btn btn-primary">Postuler</a>

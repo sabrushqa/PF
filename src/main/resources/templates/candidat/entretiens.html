@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mes entretiens</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .btn-zoom {
+            background-color: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .btn-zoom:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Mes entretiens programmés</h2>
+
+<!-- Message s'il n'y a pas d'entretiens -->
+<div th:if="${#lists.isEmpty(entretiens)}">
+    <p>Aucun entretien prévu pour le moment.</p>
+</div>
+
+<!-- Tableau des entretiens -->
+<table th:if="${not #lists.isEmpty(entretiens)}">
+    <thead>
+    <tr>
+        <th>Date et Heure</th>
+        <th>Titre de l'offre</th>
+        <th>Nom du recruteur</th>
+        <th>Lien Zoom</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="entretien : ${entretiens}">
+        <td th:text="${#temporals.format(entretien.dateEntretien, 'EEEE dd MMMM yyyy à HH:mm')}">Date</td>
+        <td th:text="${entretien.candidature.offre.titre}">Offre</td>
+        <td th:text="${entretien.candidature.offre.recruteur.nom + ' ' + entretien.candidature.offre.recruteur.prenom}">Recruteur</td>
+        <td>
+            <a th:if="${entretien.lienZoom != null}" th:href="${entretien.lienZoom}" class="btn-zoom" target="_blank">Rejoindre</a>
+            <span th:if="${entretien.lienZoom == null}">Pas encore disponible</span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

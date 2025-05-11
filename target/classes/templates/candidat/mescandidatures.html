@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes Candidatures</title>
+  <!-- Ajouter votre fichier CSS ici pour le style -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+  <h1>Mes Candidatures</h1>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Offre</th>
+      <th>Lettre de Motivation</th>
+      <th>CV</th>
+      <th>Date de Candidature</th>
+      <th>Statut</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Affichage des candidatures -->
+    <tr th:each="candidature : ${candidatures}">
+      <td th:text="${candidature.offre.titre}">Offre</td>
+      <td th:text="${candidature.lettreMotivation}">Lettre de Motivation</td>
+      <td>
+        <a th:href="@{${candidature.cvUrl}}" target="_blank">Télécharger le CV</a>
+      </td>
+      <td th:text="${candidature.dateCandidature}">Date de Candidature</td>
+      <td th:text="${candidature.statut}">Statut</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="back-link">
+    <a href="/offres">Retour aux Offres</a>
+  </div>
+</div>
+
+<!-- Optionnel: Ajouter des scripts JS ici -->
+<script src="/js/script.js"></script>
+</body>
+</html>

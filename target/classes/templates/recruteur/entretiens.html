@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Entretiens programmés</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Entretiens programmés avec vos candidats</h2>
+
+<div th:if="${#lists.isEmpty(entretiens)}">
+  <p>Aucun entretien programmé pour l’instant.</p>
+</div>
+
+<table th:if="${not #lists.isEmpty(entretiens)}">
+  <thead>
+  <tr>
+    <th>Date et Heure</th>
+    <th>Candidat</th>
+    <th>Titre de l'offre</th>
+    <th>Lien Zoom</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="entretien : ${entretiens}">
+    <td th:text="${#temporals.format(entretien.dateEntretien, 'EEEE dd MMMM yyyy à HH:mm')}">Date</td>
+    <td th:text="${entretien.candidature.candidat.nom + ' ' + entretien.candidature.candidat.prenom}">Candidat</td>
+    <td th:text="${entretien.candidature.offre.titre}">Offre</td>
+    <td>
+      <a th:if="${entretien.lienZoom != null}" th:href="${entretien.lienZoom}" target="_blank">Lien</a>
+      <span th:if="${entretien.lienZoom == null}">Non défini</span>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

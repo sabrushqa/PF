@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de CV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Montserrat:wght@400;600&family=Open+Sans:wght@400;600&family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Ces scripts doivent être ajoutés dans votre <head> si ce n'est pas déjà fait -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #1e88e5;
+            --secondary-color: #ff9800;
+            --text-color: #333;
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --border-radius: 8px;
+            --transition-speed: 0.3s;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .form-section {
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .input-with-emoji {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .input-with-emoji input,
+        .input-with-emoji textarea {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .emoji-trigger {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-left: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .emoji-trigger:hover {
+            transform: scale(1.1);
+        }
+
+        emoji-picker {
+            position: fixed;
+            z-index: 1000;
+            display: none;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color var(--transition-speed);
+            font-family: var(--font-family);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .customization-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .color-picker, .font-picker {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .color-picker label, .font-picker label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        #fontFamily {
+            width: 100%;
+            padding: 0.5rem;
+        }
+
+        .add-btn {
+            background: none;
+            border: 2px dashed var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            width: 100%;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed);
+            font-family: var(--font-family);
+        }
+
+        .add-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .export-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform var(--transition-speed);
+            font-family: var(--font-family);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .preview-section {
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cv-preview {
+            width: 794px;
+            height: 1123px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 30% 70%;
+            gap: 40px;
+            font-size: 12px;
+            font-family: var(--font-family);
+        }
+
+        .cv-left-column {
+            border-right: 1px solid #eee;
+            padding-right: 20px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+
+        .contact-info {
+            margin-bottom: 2rem;
+        }
+
+        .contact-info p {
+            margin: 0.5rem 0;
+            font-size: 12px;
+        }
+
+        .languages-list {
+            margin-bottom: 2rem;
+        }
+
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 12px;
+        }
+
+        .language-level {
+            color: var(--primary-color);
+        }
+
+        .cv-right-column {
+            padding-left: 20px;
+        }
+
+        .cv-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .cv-section h2 {
+            font-size: 14px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.25rem;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 1rem;
+        }
+
+        .experience-item h3, .education-item h3 {
+            font-size: 12px;
+            margin-bottom: 0.25rem;
+        }
+
+        .company-info, .school-info {
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        .date-range {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .description {
+            font-size: 12px;
+            margin-top: 0.5rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--background-color);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-name {
+            font-weight: 600;
+        }
+
+        .skill-level {
+            color: var(--primary-color);
+            font-size: 0.9em;
+        }
+
+        @media print {
+            body { background: none; }
+            .container { padding: 0; margin: 0; }
+            .form-section, .preview-section { display: none; }
+            .cv-preview {
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 20mm;
+                box-shadow: none;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container { grid-template-columns: 1fr; }
+            .preview-section {
+                margin-top: 2rem;
+                overflow-x: auto;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-section">
+        <h1>Créez votre CV</h1>
+        <form id="cvForm">
+            <!-- Informations personnelles -->
+            <div class="form-group">
+                <h2>Informations personnelles</h2>
+                <div class="input-with-emoji">
+                    <input type="text" id="fullName" placeholder="Nom complet" required>
+                    <button type="button" class="emoji-trigger" data-target="fullName" data-default="👤">👤</button>
+                </div>
+                <div class="input-with-emoji">
+                    <input type="email" id="email" placeholder="Email" required>
+                    <button type="button" class="emoji-trigger" data-target="email" data-default="📧">📧</button>
+                </div>
+                <div class="input-with-emoji">
+                    <input type="tel" id="phone" placeholder="Téléphone">
+                    <button type="button" class="emoji-trigger" data-target="phone" data-default="📱">📱</button>
+                </div>
+                <div class="input-with-emoji">
+                    <input type="text" id="location" placeholder="Localisation">
+                    <button type="button" class="emoji-trigger" data-target="location" data-default="📍">📍</button>
+                </div>
+                <input type="file" id="photo" accept="image/*">
+            </div>
+
+            <!-- Résumé -->
+            <div class="form-group">
+                <h2>Résumé professionnel</h2>
+                <div class="input-with-emoji">
+                    <textarea id="summary" rows="4" placeholder="Bref résumé de votre profil"></textarea>
+                    <button type="button" class="emoji-trigger" data-target="summary" data-default="📝">📝</button>
+                </div>
+            </div>
+
+            <!-- Expérience -->
+            <div class="form-group" id="experienceContainer">
+                <h2>Expérience professionnelle</h2>
+                <div class="experience-entry">
+                    <div class="input-with-emoji">
+                        <input type="text" placeholder="Titre du poste">
+                        <button type="button" class="emoji-trigger" data-target="experience-title" data-default="💼">💼</button>
+                    </div>
+                    <div class="input-with-emoji">
+                        <input type="text" placeholder="Entreprise">
+                        <button type="button" class="emoji-trigger" data-target="experience-company" data-default="🏢">🏢</button>
+                    </div>
+                    <input type="text" placeholder="Localisation">
+                    <input type="date" placeholder="Date de début">
+                    <input type="date" placeholder="Date de fin">
+                    <div class="input-with-emoji">
+                        <textarea placeholder="Description des responsabilités"></textarea>
+                        <button type="button" class="emoji-trigger" data-target="experience-description" data-default="📋">📋</button>
+                    </div>
+                </div>
+                <button type="button" class="add-btn" onclick="addExperience()">+ Ajouter une expérience</button>
+            </div>
+
+            <!-- Formation -->
+            <div class="form-group" id="educationContainer">
+                <h2>Formation</h2>
+                <div class="education-entry">
+                    <div class="input-with-emoji">
+                        <input type="text" placeholder="Diplôme">
+                        <button type="button" class="emoji-trigger" data-target="education-degree" data-default="🎓">🎓</button>
+                    </div>
+                    <div class="input-with-emoji">
+                        <input type="text" placeholder="École">
+                        <button type="button" class="emoji-trigger" data-target="education-school" data-default="🏫">🏫</button>
+                    </div>
+                    <input type="text" placeholder="Localisation">
+                    <input type="date" placeholder="Date de début">
+                    <input type="date" placeholder="Date de fin">
+                    <div class="input-with-emoji">
+                        <textarea placeholder="Description"></textarea>
+                        <button type="button" class="emoji-trigger" data-target="education-description" data-default="📚">📚</button>
+                    </div>
+                </div>
+                <button type="button" class="add-btn" onclick="addEducation()">+ Ajouter une formation</button>
+            </div>
+
+            <!-- Skills section -->
+            <div class="form-group" id="skillsContainer">
+                <h2>Compétences</h2>
+                <div class="skills-entry">
+                    <div class="input-with-emoji">
+                        <input type="text" placeholder="Compétence">
+                        <button type="button" class="emoji-trigger" data-target="skill" data-default="⭐">⭐</button>
+                    </div>
+                    <select>
+                        <option value="expert">Expert</option>
+                        <option value="avance">Avancé</option>
+                        <option value="intermediaire">Intermédiaire</option>
+                        <option value="debutant">Débutant</option>
+                    </select>
+                </div>
+                <button type="button" class="add-btn" onclick="addSkill()">+ Ajouter une compétence</button>
+            </div>
+
+            <!-- Langues -->
+            <div class="form-group" id="languagesContainer">
+                <h2>Langues</h2>
+                <div class="language-entry">
+                    <div class="input-with-emoji">
+                        <input type="text" placeholder="Langue">
+                        <button type="button" class="emoji-trigger" data-target="language" data-default="🗣️">🗣️</button>
+                    </div>
+                    <select>
+                        <option value="debutant">Débutant</option>
+                        <option value="intermediaire">Intermédiaire</option>
+                        <option value="avance">Avancé</option>
+                        <option value="bilingue">Bilingue</option>
+                    </select>
+                </div>
+                <button type="button" class="add-btn" onclick="addLanguage()">+ Ajouter une langue</button>
+            </div>
+
+            <!-- Personnalisation -->
+            <div class="form-group">
+                <h2>Personnalisation</h2>
+                <div class="customization-options">
+                    <div class="color-picker">
+                        <input type="color" id="themeColor" value="#1e88e5">
+                        <label for="themeColor">Couleur du thème</label>
+                    </div>
+                    <div class="font-picker">
+                        <select id="fontFamily" onchange="updateFont(this.value)">
+                            <option value="Roboto">Roboto</option>
+                            <option value="Open Sans">Open Sans</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Lato">Lato</option>
+                        </select>
+                        <label for="fontFamily">Police d'écriture</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'export -->
+            <div class="export-buttons">
+                <button type="button" onclick="generatePDF()" class="btn-primary">Télécharger PDF</button>
+                <button type="button" onclick="generateDOCX()" class="btn-secondary">Télécharger DOCX</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="preview-section">
+        <div id="cvPreview" class="cv-preview">
+            <!-- Le CV sera généré ici -->
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/turndown@7.1.1/lib/turndown.browser.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script type="module">
+    import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@1.7.0/index.js';
+</script>
+
+<emoji-picker id="emojiPicker" class="light"></emoji-picker>
+<script src="/js/main.js" type="module"></script>
+
+
+</body>
+</html>

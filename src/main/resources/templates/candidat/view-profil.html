@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Profil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+<!-- Inclure la barre de navigation -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="py-5">
+
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="card-title">Profil de <span th:text="${candidat.prenom + ' ' + candidat.nom}"></span></h1>
+                    <a th:href="@{/candidat/profil/edit}" class="btn btn-warning btn-lg">
+                        <i class="bi bi-pencil-square"></i> Modifier mon profil
+                    </a>
+                </div>
+
+                <!-- Informations personnelles -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Informations personnelles</h5>
+                        <p><strong>Email:</strong> <span th:text="${candidat.user.email}"></span></p>
+                        <p><strong>Téléphone:</strong> <span th:text="${candidat.telephone}"></span></p>
+                        <p><strong>Adresse:</strong> <span th:text="${candidat.adresse}"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Formation initiale</h5>
+                        <p><strong>Formation:</strong> <span th:text="${candidat.formation}"></span></p>
+                        <p><strong>Diplôme:</strong> <span th:text="${candidat.diplome}"></span></p>
+                        <p><strong>Spécialité:</strong> <span th:text="${candidat.specialite}"></span></p>
+                    </div>
+                </div>
+
+                <!-- Bio -->
+                <div class="mb-4">
+                    <h5>À propos de moi</h5>
+                    <div class="card">
+                        <div class="card-body">
+                            <p th:text="${profil.bio}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expériences -->
+                <div class="mb-4">
+                    <h5>Expériences professionnelles</h5>
+                    <div class="list-group">
+                        <div class="list-group-item" th:each="exp : ${profil.experiences}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${exp.poste}"></h5>
+                                <small>
+                                    <span th:text="${#temporals.format(exp.dateDebut, 'MMM yyyy')}"></span> -
+                                    <span th:text="${exp.dateFin != null ? #temporals.format(exp.dateFin, 'MMM yyyy') : 'Présent'}"></span>
+                                </small>
+                            </div>
+                            <p class="mb-1">
+                                <strong th:text="${exp.entreprise}"></strong>
+                            </p>
+                            <p class="mb-1" th:text="${exp.description}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formations -->
+                <div class="mb-4">
+                    <h5>Parcours académique</h5>
+                    <div class="list-group">
+                        <div class="list-group-item" th:each="form : ${profil.formations}">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1" th:text="${form.diplome}"></h5>
+                                <small>
+                                    <span th:text="${#temporals.format(form.dateDebut, 'MMM yyyy')}"></span> -
+                                    <span th:text="${form.dateFin != null ? #temporals.format(form.dateFin, 'MMM yyyy') : 'Présent'}"></span>
+                                </small>
+                            </div>
+                            <p class="mb-1" th:text="${form.ecole}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Langues -->
+                <div class="mb-4">
+                    <h5>Compétences linguistiques</h5>
+                    <div class="row">
+                        <div class="col-md-4 mb-3" th:each="langue : ${profil.langues}">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title" th:text="${langue.nom}"></h5>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar"
+                                             th:style="'width: ' + ${langue.niveau == 'Débutant' ? '25%' :
+                                                             (langue.niveau == 'Intermédiaire' ? '50%' :
+                                                             (langue.niveau == 'Avancé' ? '75%' : '100%'))}"
+                                             th:text="${langue.niveau}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

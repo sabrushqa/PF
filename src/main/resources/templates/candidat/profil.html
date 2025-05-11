@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Primary Colors */
+            --primary-blue: #0056b3;
+            --primary-blue-light: #2a75c5;
+            --primary-blue-dark: #003d7e;
+
+            /* Secondary Colors */
+            --primary-orange: #ff6a00;
+            --primary-orange-light: #ff8c3a;
+            --primary-orange-dark: #e65c00;
+
+            /* Background Colors */
+            --light-blue: #e6f0ff;
+            --light-orange: #fff0e6;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+
+            /* Text Colors */
+            --text-dark: #2c3e50;
+            --text-medium: #566573;
+            --text-light: #7f8c8d;
+
+            /* Other Colors */
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+
+            /* Border Radius */
+            --border-radius-sm: 0.25rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 1rem;
+            --border-radius-xl: 1.5rem;
+
+            /* Transitions */
+            --transition-fast: 0.2s;
+            --transition-medium: 0.3s;
+            --transition-slow: 0.5s;
+        }
+
+        /* Base Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: var(--primary-blue-dark);
+        }
+
+        a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            transition: color var(--transition-fast) ease;
+        }
+
+        a:hover {
+            color: var(--primary-orange);
+        }
+
+        /* Header Styles */
+        .header-container {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+            50% {
+                transform: translate(10%, 10%) scale(1.1);
+                opacity: 0.2;
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+        }
+
+        .page-title {
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Section Styles */
+        .section-container {
+            background-color: var(--bg-white);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform var(--transition-medium) ease, box-shadow var(--transition-medium) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-blue), var(--primary-orange));
+            border-radius: var(--border-radius-sm) 0 0 var(--border-radius-sm);
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            border-left: 4px solid var(--primary-orange);
+            padding-left: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-section-icon {
+            background-color: var(--light-orange);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: var(--spacing-md);
+            color: var(--primary-orange);
+            font-size: 1.5rem;
+            transition: transform var(--transition-fast) ease, background-color var(--transition-fast) ease;
+        }
+
+        .section-container:hover .profile-section-icon {
+            transform: scale(1.1) rotate(5deg);
+            background-color: var(--primary-orange-light);
+            color: white;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-medium) ease;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: var(--light-blue);
+            border-bottom: none;
+            padding: var(--spacing-lg);
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .card-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all var(--transition-fast) ease;
+            text-transform: capitalize;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            border-color: var(--primary-blue);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--primary-blue) 100%);
+            border-color: var(--primary-blue-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-dark) 100%);
+            border-color: var(--primary-orange);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--primary-orange-light) 0%, var(--primary-orange) 100%);
+            border-color: var(--primary-orange-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 106, 0, 0.3);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2);
+        }
+
+        .btn-outline-danger {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .btn-outline-danger:hover {
+            background-color: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.2);
+        }
+
+        .add-button {
+            border-radius: 50px;
+            padding: 0.5rem 1.25rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-medium) ease;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Badge and List Styles */
+        .badge {
+            padding: 0.5em 0.8em;
+            font-weight: 500;
+            border-radius: 50px;
+        }
+
+        .list-group-item {
+            border-left: 3px solid var(--primary-orange);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--border-radius-md);
+            transition: all var(--transition-medium) ease;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        .list-group-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Text and Icon Styles */
+        .experience-date {
+            color: var(--primary-orange);
+            font-weight: 500;
+        }
+
+        .experience-company {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .icon-blue {
+            color: var(--primary-blue);
+        }
+
+        .icon-orange {
+            color: var(--primary-orange);
+        }
+
+        /* Form Styles */
+        .form-control, .form-select {
+            border-radius: var(--border-radius-md);
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            transition: all var(--transition-fast) ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.25rem rgba(0, 86, 179, 0.25);
+        }
+
+        .input-group-text {
+            background-color: var(--light-blue);
+            border: 1px solid #e0e0e0;
+            color: var(--primary-blue);
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            border: none;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: var(--light-blue);
+            border-bottom: 3px solid var(--primary-orange);
+            padding: var(--spacing-lg);
+        }
+
+        .modal-header .modal-title {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+        }
+
+        .modal-footer {
+            border-top: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        /* Photo Upload Styles */
+        .profile-photo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-medium) ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-upload-container {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: var(--spacing-xl);
+            transition: all var(--transition-medium) ease;
+        }
+
+        .photo-upload-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--primary-blue-dark);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            margin-top: var(--spacing-xl);
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: var(--spacing-lg) 0;
+            }
+
+            .section-container {
+                padding: var(--spacing-lg);
+            }
+
+            .card-header, .card-body {
+                padding: var(--spacing-md);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: var(--spacing-xs);
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+                margin-bottom: var(--spacing-xs);
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .slide-in {
+            animation: slideInRight 0.5s ease forwards;
+        }
+
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+        .animate-delay-4 { animation-delay: 0.4s; }
+        .animate-delay-5 { animation-delay: 0.5s; }
+
+        /* Action Button Styles */
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .action-button {
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-medium) ease;
+        }
+
+        .action-button i {
+            margin-right: 0.5rem;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue-light);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-blue);
+        }
+    </style>
+</head>
+<body>
+<!-- Header Section -->
+<div class="header-container">
+    <div class="container">
+        <h1 class="page-title text-center mb-0">Mon Profil Professionnel</h1>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Photo Upload Section -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="photo-upload-container fade-in">
+                <div class="profile-photo-container mb-4">
+                    <img th:if="${profil.photo != null}"
+                         th:src="@{'/uploads/' + ${profil.photo} + '?v=' + ${#dates.createNow().getTime()}}"
+                         alt="Photo de profil"
+                         class="profile-photo"
+                         src="https://via.placeholder.com/150">
+                </div>
+
+                <form th:action="@{/candidat/profil/photo}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="photo" class="form-label fw-bold">Photo de profil</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-camera"></i></span>
+                            <input class="form-control" type="file" name="photo" id="photo" accept="image/*" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-upload me-2"></i>Mettre à jour la photo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-header">Bio</div>
+        <div class="card-body">
+            <form th:action="@{/candidat/profil/bio/modifier}" method="post">
+                <div class="mb-3">
+                    <textarea name="bio" class="form-control" rows="4" th:text="${profil.bio}">Votre bio ici...</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ====================== EXPERIENCES ====================== -->
+    <div class="section-container fade-in animate-delay-1">
+        <div class="d-flex align-items-center mb-4">
+            <div class="profile-section-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h3 class="section-title mb-0">Expériences professionnelles</h3>
+        </div>
+
+        <button class="btn btn-success add-button mb-4" data-bs-toggle="modal" data-bs-target="#modalAddExp">
+            <i class="fas fa-plus me-2"></i>Ajouter une expérience
+        </button>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div th:each="exp : ${profil.experiences}" class="col slide-in">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0" th:text="${exp.poste}">Poste</h5>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-primary btn-sm action-button" data-bs-toggle="modal" th:attr="data-bs-target='#editExp_' + ${exp.id}">
+                                <i class="fas fa-edit"></i>Modifier
+                            </button>
+                            <form th:action="@{'/candidat/profil/experience/supprimer/' + ${exp.id}}" method="post" class="d-inline">
+                                <button class="btn btn-outline-danger btn-sm action-button">
+                                    <i class="fas fa-trash-alt"></i>Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="experience-company">
+                            <i class="fas fa-building me-2 icon-blue"></i>
+                            <span th:text="${exp.entreprise}">Entreprise</span> -
+                            <span th:text="${exp.lieu}">Lieu</span>
+                        </p>
+                        <p class="experience-date">
+                            <i class="fas fa-calendar-alt me-2 icon-orange"></i>
+                            <span th:text="${#temporals.format(exp.dateDebut, 'yyyy-MM-dd')}">2020-01-01</span>
+                            à
+                            <span th:text="${exp.dateFin != null ? #temporals.format(exp.dateFin, 'yyyy-MM-dd') : 'Présent'}">2023-01-01</span>
+                        </p>
+                        <p class="mt-3" th:text="${exp.description}">Description de l'expérience professionnelle</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== FORMATIONS ====================== -->
+    <div class="section-container fade-in animate-delay-2">
+        <div class="d-flex align-items-center mb-4">
+            <div class="profile-section-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h3 class="section-title mb-0">Formations</h3>
+        </div>
+
+        <button class="btn btn-success add-button mb-4" data-bs-toggle="modal" data-bs-target="#modalAddForm">
+            <i class="fas fa-plus me-2"></i>Ajouter une formation
+        </button>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div th:each="form : ${profil.formations}" class="col slide-in">
+                <div class="card h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0" th:text="${form.diplome}">Diplôme</h5>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline-primary btn-sm action-button" data-bs-toggle="modal" th:attr="data-bs-target='#editForm_' + ${form.id}">
+                                <i class="fas fa-edit"></i>Modifier
+                            </button>
+                            <form th:action="@{'/candidat/profil/formation/supprimer/' + ${form.id}}" method="post" class="d-inline">
+                                <button class="btn btn-outline-danger btn-sm action-button">
+                                    <i class="fas fa-trash-alt"></i>Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="experience-company">
+                            <i class="fas fa-university me-2 icon-blue"></i>
+                            <span th:text="${form.etablissement}">Établissement</span> -
+                            <span th:text="${form.lieu}">Lieu</span>
+                        </p>
+                        <p class="experience-date">
+                            <i class="fas fa-calendar-alt me-2 icon-orange"></i>
+                            <span th:text="${#temporals.format(form.dateDebut, 'yyyy-MM-dd')}">2015-09-01</span>
+                            à
+                            <span th:text="${form.dateFin != null ? #temporals.format(form.dateFin, 'yyyy-MM-dd') : 'Présent'}">2020-06-30</span>
+                        </p>
+                        <p class="mt-3" th:text="${form.description}">Description de la formation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== LANGUES ====================== -->
+    <div class="section-container fade-in animate-delay-3">
+        <div class="d-flex align-items-center mb-4">
+            <div class="profile-section-icon">
+                <i class="fas fa-language"></i>
+            </div>
+            <h3 class="section-title mb-0">Compétences linguistiques</h3>
+        </div>
+
+        <button class="btn btn-success add-button mb-4" data-bs-toggle="modal" data-bs-target="#modalAddLang">
+            <i class="fas fa-plus me-2"></i>Ajouter une langue
+        </button>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div th:each="lang : ${profil.langues}" class="col slide-in">
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <i class="fas fa-globe me-2 icon-blue"></i>
+                        <strong th:text="${lang.nom}">Langue</strong>
+                        <span class="badge bg-primary rounded-pill ms-2" th:text="${lang.niveau}">Niveau</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-outline-primary btn-sm action-button" data-bs-toggle="modal" th:attr="data-bs-target='#editLang_' + ${lang.id}">
+                            <i class="fas fa-edit"></i>Modifier
+                        </button>
+                        <form th:action="@{'/candidat/profil/langue/supprimer/' + ${lang.id}}" method="post" class="d-inline">
+                            <button class="btn btn-outline-danger btn-sm action-button">
+                                <i class="fas fa-trash-alt"></i>Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====================== MODALS ====================== -->
+<!-- Modal ajout expérience -->
+<div class="modal fade" id="modalAddExp" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/candidat/profil/experience/ajouter" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2 icon-orange"></i>Nouvelle expérience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Poste</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                        <input name="poste" class="form-control" placeholder="Intitulé du poste" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Entreprise</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-building"></i></span>
+                        <input name="entreprise" class="form-control" placeholder="Nom de l'entreprise" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Lieu</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        <input name="lieu" class="form-control" placeholder="Ville, Pays" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date de début</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        <input type="date" name="dateDebut" class="form-control" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date de fin (laisser vide si poste actuel)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                        <input type="date" name="dateFin" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="4" placeholder="Décrivez vos responsabilités et réalisations"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button class="btn btn-success">Ajouter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modals modification expériences -->
+<div th:each="exp : ${profil.experiences}">
+    <div th:id="'editExp_' + ${exp.id}" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <form th:action="@{'/candidat/profil/experience/modifier/' + ${exp.id}}" method="post" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2 icon-blue"></i>Modifier expérience</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Poste</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                            <input name="poste" class="form-control" th:value="${exp.poste}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Entreprise</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                            <input name="entreprise" class="form-control" th:value="${exp.entreprise}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lieu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input name="lieu" class="form-control" th:value="${exp.lieu}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date de début</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input type="date" name="dateDebut" class="form-control" th:value="${exp.dateDebut}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date de fin</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                            <input type="date" name="dateFin" class="form-control" th:value="${exp.dateFin}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4" th:text="${exp.description}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal ajout formation -->
+<div class="modal fade" id="modalAddForm" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/candidat/profil/formation/ajouter" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2 icon-orange"></i>Nouvelle formation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Diplôme</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                        <input name="diplome" class="form-control" placeholder="Titre du diplôme" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Établissement</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-university"></i></span>
+                        <input name="etablissement" class="form-control" placeholder="Nom de l'établissement" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Lieu</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        <input name="lieu" class="form-control" placeholder="Ville, Pays" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date de début</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        <input type="date" name="dateDebut" class="form-control" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Date de fin (laisser vide si en cours)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                        <input type="date" name="dateFin" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="4" placeholder="Décrivez votre formation et vos résultats"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button class="btn btn-success">Ajouter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modals modification formations -->
+<div th:each="form : ${profil.formations}">
+    <div th:id="'editForm_' + ${form.id}" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <form th:action="@{'/candidat/profil/formation/modifier/' + ${form.id}}" method="post" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2 icon-blue"></i>Modifier formation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Diplôme</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                            <input name="diplome" class="form-control" th:value="${form.diplome}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Établissement</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-university"></i></span>
+                            <input name="etablissement" class="form-control" th:value="${form.etablissement}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lieu</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input name="lieu" class="form-control" th:value="${form.lieu}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date de début</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            <input type="date" name="dateDebut" class="form-control" th:value="${form.dateDebut}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date de fin</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                            <input type="date" name="dateFin" class="form-control" th:value="${form.dateFin}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4" th:text="${form.description}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal ajout langue -->
+<div class="modal fade" id="modalAddLang" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="/candidat/profil/langue/ajouter" method="post" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus-circle me-2 icon-orange"></i>Nouvelle langue</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Langue</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-language"></i></span>
+                        <input name="nom" class="form-control" placeholder="Nom de la langue" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Niveau</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                        <select name="niveau" class="form-select" required>
+                            <option value="">Sélectionnez un niveau</option>
+                            <option value="Débutant">Débutant</option>
+                            <option value="Intermédiaire">Intermédiaire</option>
+                            <option value="Avancé">Avancé</option>
+                            <option value="Courant">Courant</option>
+                            <option value="Bilingue">Bilingue</option>
+                            <option value="Langue maternelle">Langue maternelle</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button class="btn btn-success">Ajouter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modals modification langues -->
+<div th:each="lang : ${profil.langues}">
+    <div th:id="'editLang_' + ${lang.id}" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <form th:action="@{'/candidat/profil/langue/modifier/' + ${lang.id}}" method="post" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2 icon-blue"></i>Modifier langue</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Langue</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-language"></i></span>
+                            <input name="nom" class="form-control" th:value="${lang.nom}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Niveau</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                            <select name="niveau" class="form-select" required>
+                                <option value="">Sélectionnez un niveau</option>
+                                <option value="Débutant" th:selected="${lang.niveau == 'Débutant'}">Débutant</option>
+                                <option value="Intermédiaire" th:selected="${lang.niveau == 'Intermédiaire'}">Intermédiaire</option>
+                                <option value="Avancé" th:selected="${lang.niveau == 'Avancé'}">Avancé</option>
+                                <option value="Courant" th:selected="${lang.niveau == 'Courant'}">Courant</option>
+                                <option value="Bilingue" th:selected="${lang.niveau == 'Bilingue'}">Bilingue</option>
+                                <option value="Langue maternelle" th:selected="${lang.niveau == 'Langue maternelle'}">Langue maternelle</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="mb-3">Mon Profil Professionnel</h5>
+                <p class="mb-0">Votre plateforme pour gérer votre présence professionnelle en ligne</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <p class="mb-0">© 2025 Mon Profil Professionnel - Tous droits réservés</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Animation Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate items when they come into view
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.section-container, .card, .list-group-item');
+
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+
+                if(elementPosition < screenPosition) {
+                    if(element.classList.contains('section-container')) {
+                        element.classList.add('fade-in');
+                    } else {
+                        element.classList.add('slide-in');
+                    }
+                }
+            });
+        };
+
+        // Initial check
+        animateOnScroll();
+
+        // Listen for scroll events
+        window.addEventListener('scroll', animateOnScroll);
+
+        // Add hover effects for buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+            });
+
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+        });
+    });
+</script>
+</body>
+</html>
