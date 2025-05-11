@@ -1,5 +1,6 @@
 package com.example.demo.Repository;
 
+import com.example.demo.model.Candidat;
 import com.example.demo.model.Candidature;
 import com.example.demo.model.Entretien;
 import com.example.demo.model.Recruteur;
@@ -18,4 +19,14 @@ public interface EntretienRepository extends JpaRepository<Entretien, Long> {
             Recruteur recruteur, LocalDateTime date);
 
 
+    long countByCandidature_CandidatAndDateEntretienAfter(Candidat candidat, LocalDateTime date);
+
+    List<Entretien> findByCandidature_CandidatAndDateEntretienAfterOrderByDateEntretienAsc(
+            Candidat candidat, LocalDateTime date);
+
+    List<Entretien> findByCandidature_CandidatAndDateEntretienBeforeOrderByDateEntretienDesc(
+            Candidat candidat, LocalDateTime date);
 }
+
+
+

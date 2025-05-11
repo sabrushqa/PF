@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,5 +75,24 @@ public class EntretienService {
                 formattedTime,
                 zoomLink
         );
+    }
+
+    public long countByCandidatAndDateAfter(Candidat candidat, LocalDateTime date) {
+        return entretienRepository.countByCandidature_CandidatAndDateEntretienAfter(candidat, date);
+    }
+
+    public List<Entretien> findUpcomingByCandidat(Candidat candidat) {
+        return entretienRepository.findByCandidature_CandidatAndDateEntretienAfterOrderByDateEntretienAsc(
+                candidat, LocalDateTime.now());
+    }
+
+    public List<Entretien> findPastByCandidat(Candidat candidat) {
+        return entretienRepository.findByCandidature_CandidatAndDateEntretienBeforeOrderByDateEntretienDesc(
+                candidat, LocalDateTime.now());
+    }
+
+
+    public List<Entretien> findByCandidatAndDateAfter(Candidat candidat, LocalDateTime date) {
+        return entretienRepository.findByCandidature_CandidatAndDateEntretienAfterOrderByDateEntretienAsc(candidat, date);
     }
 }

@@ -275,12 +275,4 @@ public class RecruteurController {
         redirectAttributes.addFlashAttribute("success", "Profil modifié avec succès.");
         return "redirect:/recruteur/profil";
     }
-
-
-
-
-
-
-
-
 }

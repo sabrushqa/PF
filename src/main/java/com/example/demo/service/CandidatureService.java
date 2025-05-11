@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -72,4 +74,20 @@ public class CandidatureService {
         return candidatureRepository.findByStatut(statut);
     }
 
+    public long countByCandidat(Candidat candidat) {
+        return candidatureRepository.countByCandidat(candidat);
+    }
+
+    public long countByCandidatAndStatut(Candidat candidat, String statut) {
+        return candidatureRepository.countByCandidatAndStatut(candidat, statut);
+    }
+
+    public Map<String, Long> getCandidatureStats(Candidat candidat) {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("total", countByCandidat(candidat));
+        stats.put("acceptees", countByCandidatAndStatut(candidat, "ACCEPTEE"));
+        stats.put("refusees", countByCandidatAndStatut(candidat, "REFUSEE"));
+        stats.put("en_attente", countByCandidatAndStatut(candidat, "EN_ATTENTE"));
+        return stats;
+    }
 }

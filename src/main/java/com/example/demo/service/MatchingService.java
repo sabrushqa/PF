@@ -1,92 +1,203 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Candidat;
 import com.example.demo.model.Candidature;
 import com.example.demo.model.Offre;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private static final Logger logger = LoggerFactory.getLogger(MatchingService.class);
+    private final CandidatureService candidatureService;
 
-    @Value("${matching.api.url}")
-    private String matchingApiUrl;
+    /**
+     * Calcule le score de matching entre un CV de candidat et une offre d'emploi
+     * @param candidature La candidature contenant la référence au candidat et à l'offre
+     * @return Le score de matching entre 0 et 100
+     */
+    public double calculateMatchingScore(Candidature candidature) {
+        Candidat candidat = candidature.getCandidat();
+        Offre offre = candidature.getOffre();
 
-    @Value("${matching.api.key:#{null}}")  // Rend cette propriété optionnelle
-    private String matchingApiKey;
+        // Extraction des mots-clés du CV
+        Set<String> cvKeywords = extractKeywords(
+                candidat.getFormation(),
+                candidat.getDiplome(),
+                candidat.getSpecialite(),
+                candidat.getDescription(),
+                candidature.getCv()
+        );
+        System.out.println(cvKeywords);
 
-    @Value("${application.upload.dir}")
-    private String uploadDir;
+        // Extraction des mots-clés de l'offre
+        Set<String> offreKeywords = extractKeywords(
+                offre.getTitre(),
+                offre.getDescription(),
+                offre.getNiveauExperience(),
+                offre.getSecteur()
+        );
+        System.out.println(offreKeywords);
 
-    public String saveFile(MultipartFile file) throws Exception {
-        // Créer le répertoire s'il n'existe pas
-        File directory = new File(uploadDir);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+        // Calcul du score basé sur différents critères
+        double keywordMatchScore = calculateKeywordMatchScore(cvKeywords, offreKeywords);
+        double sectorMatchScore = calculateSectorMatch(candidat.getSpecialite(), offre.getSecteur());
+        double experienceMatchScore = calculateExperienceMatch(candidat.getDescription(), offre.getNiveauExperience());
 
-        // Créer un nom de fichier unique
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(uploadDir, fileName);
+        // Nouvelle pondération
+        double finalScore = (keywordMatchScore * 0.5) + (sectorMatchScore * 0.3) + (experienceMatchScore * 0.2);
 
-        // Sauvegarder le fichier
-        Files.write(filePath, file.getBytes());
+// Amplification douce ajustée pour donner plus de poids aux correspondances
+        finalScore = Math.pow(finalScore / 100, 0.6) * 100;  // Augmentation plus marquée mais contrôlée
 
-        return fileName;
+// Arrondir à une décimale
+        finalScore = (Math.round(finalScore * 10) / 10.0)*1.5;
+
+        // Journaliser les détails du matching pour le débogage
+        logger.info("Matching score details for candidature {}: keywords={}, sector={}, experience={}, final={}",
+                candidature.getId(), keywordMatchScore, sectorMatchScore, experienceMatchScore, finalScore);
+
+// Mettre à jour le score dans la candidature
+        candidature.setMatchingScore(finalScore);
+        candidatureService.save(candidature);
+
+
+        return finalScore;
     }
 
-    public double calculateMatchingScore(Candidature candidature) {
-        try {
-            Offre offre = candidature.getOffre();
-            String cvPath = Paths.get(uploadDir, candidature.getCv()).toString();
+    /**
+     * Extrait les mots-clés significatifs d'un ou plusieurs textes
+     */
+    private Set<String> extractKeywords(String... texts) {
+        Set<String> keywords = new HashSet<>();
 
-            // Préparer les données pour l'API
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("job_description", offre.getDescription());
-            requestBody.put("cv_path", cvPath);
-            requestBody.put("cv_content", new String(Files.readAllBytes(Paths.get(cvPath))));
+        // Liste de mots vides (à ignorer)
+        Set<String> stopWords = new HashSet<>(Arrays.asList(
+                "le", "la", "les", "un", "une", "des", "et", "ou", "de", "du", "en", "à", "au", "aux",
+                "avec", "ce", "cette", "ces", "mon", "ma", "mes", "ton", "ta", "tes", "son", "sa", "ses",
+                "notre", "nos", "votre", "vos", "leur", "leurs", "pour", "par", "sur", "dans", "chez",
+                "qui", "que", "quoi", "dont", "où", "comment", "pourquoi", "quand"
+        ));
 
-            // Configurer les headers
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        for (String text : texts) {
+            if (text == null) continue;
 
-            // Ajouter la clé API uniquement si elle est configurée
-            if (matchingApiKey != null && !matchingApiKey.isEmpty() && !matchingApiKey.equals("votre_api_key_ici")) {
-                headers.set("X-API-KEY", matchingApiKey);
+            // Convertir en minuscules et supprimer les caractères spéciaux
+            String cleanText = text.toLowerCase().replaceAll("[^a-zàáâäçèéêëìíîïñòóôöùúûü0-9\\s]", " ");
+
+            // Découper le texte en mots
+            String[] words = cleanText.split("\\s+");
+
+            for (String word : words) {
+                // Ignorer les mots vides et les mots trop courts
+                if (!stopWords.contains(word) && word.length() > 2) {
+                    keywords.add(word);
+                }
             }
-
-            // Faire la requête à l'API externe
-            HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                    matchingApiUrl,
-                    request,
-                    String.class
-            );
-
-            // Analyser la réponse
-            JsonNode root = objectMapper.readTree(response.getBody());
-            return root.get("matching_score").asDouble();
-        } catch (Exception e) {
-            e.printStackTrace();
-            // En cas d'erreur, retourner un score par défaut
-            return 0.5;
         }
+
+        return keywords;
+    }
+
+    /**
+     * Calcule le score de correspondance entre les mots-clés du CV et de l'offre
+     */
+    private double calculateKeywordMatchScore(Set<String> cvKeywords, Set<String> offreKeywords) {
+        if (offreKeywords.isEmpty()) return 0;
+
+        int matches = 0;
+
+        // Compter les correspondances
+        for (String keyword : cvKeywords) {
+            if (offreKeywords.contains(keyword)) {
+                matches++;
+            }
+        }
+
+        // Calculer le pourcentage de correspondance (maximum 100%)
+        return Math.min(100, (matches * 100.0) / offreKeywords.size());
+    }
+
+    /**
+     * Calcule le score de correspondance entre la spécialité du candidat et le secteur de l'offre
+     */
+    private double calculateSectorMatch(String specialite, String secteur) {
+        if (specialite == null || secteur == null) return 0;
+
+        // Convertir en minuscules pour la comparaison
+        specialite = specialite.toLowerCase();
+        secteur = secteur.toLowerCase();
+
+        // Correspondance exacte
+        if (specialite.equals(secteur)) {
+            return 100;
+        }
+
+        // Correspondance partielle (si le secteur contient la spécialité ou vice versa)
+        if (specialite.contains(secteur) || secteur.contains(specialite)) {
+            return 75;
+        }
+
+        // Correspondance de mots-clés
+        Set<String> specialiteKeywords = extractKeywords(specialite);
+        Set<String> secteurKeywords = extractKeywords(secteur);
+
+        return calculateKeywordMatchScore(specialiteKeywords, secteurKeywords);
+    }
+
+    /**
+     * Évalue la correspondance entre l'expérience du candidat et le niveau requis dans l'offre
+     */
+    private double calculateExperienceMatch(String cvDescription, String niveauExperience) {
+        if (cvDescription == null || niveauExperience == null) return 0;
+
+        cvDescription = cvDescription.toLowerCase();
+        niveauExperience = niveauExperience.toLowerCase();
+
+        // Recherche d'années d'expérience dans le CV
+        int yearsOfExperience = extractYearsOfExperience(cvDescription);
+
+        // Score basé sur le niveau requis et l'expérience du candidat
+        if (niveauExperience.contains("junior") || niveauExperience.contains("débutant")) {
+            return yearsOfExperience <= 2 ? 100 : 75;
+        } else if (niveauExperience.contains("confirmé") || niveauExperience.contains("intermédiaire")) {
+            return (yearsOfExperience >= 2 && yearsOfExperience <= 5) ? 100 :
+                    (yearsOfExperience > 5) ? 90 : 50;
+        } else if (niveauExperience.contains("senior") || niveauExperience.contains("expert")) {
+            return yearsOfExperience >= 5 ? 100 :
+                    (yearsOfExperience >= 3) ? 70 : 30;
+        }
+
+        return 50; // Score par défaut si le niveau n'est pas clairement défini
+    }
+
+    /**
+     * Extrait le nombre d'années d'expérience mentionné dans un texte
+     */
+    private int extractYearsOfExperience(String text) {
+        // Pattern pour trouver les mentions d'années d'expérience
+        Pattern pattern = Pattern.compile("(\\d+)\\s*an(s)?\\s*(d['']expérience)?");
+        Matcher matcher = pattern.matcher(text);
+
+        int maxYears = 0;
+
+        while (matcher.find()) {
+            try {
+                int years = Integer.parseInt(matcher.group(1));
+                maxYears = Math.max(maxYears, years);
+            } catch (NumberFormatException e) {
+                // Ignorer si la conversion en nombre échoue
+            }
+        }
+
+        return maxYears;
     }
 }
