@@ -1,13 +1,244 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postuler à l'Offre</title>
-    <!-- Ajouter votre fichier CSS ici pour le style -->
-    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --orange-primary: #ff7f00;
+            --orange-light: #ff9933;
+            --orange-hover: #ff6600;
+            --blue-primary: #1e88e5;
+            --blue-light: #64b5f6;
+            --blue-hover: #0d47a1;
+            --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gradient-bg);
+            padding: 30px;
+            color: #333;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: var(--blue-primary);
+            font-size: 28px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--orange-primary);
+        }
+
+        h1 span {
+            color: var(--orange-primary);
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 16px;
+        }
+
+        textarea, input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        textarea:focus, input[type="email"]:focus {
+            border-color: var(--blue-primary);
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.25);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+
+        .file-upload-label {
+            background: linear-gradient(135deg, var(--blue-light) 0%, var(--blue-primary) 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            cursor: pointer;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover .file-upload-label {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-hover) 100%);
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+            display: block;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, var(--orange-primary) 0%, var(--orange-light) 100%);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(255, 127, 0, 0.3);
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, var(--orange-hover) 0%, var(--orange-primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 127, 0, 0.4);
+        }
+
+        button[type="submit"] i {
+            margin-right: 8px;
+        }
+
+        .back-link {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--blue-hover) 100%);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(30, 136, 229, 0.3);
+            font-size: 16px;
+        }
+
+        .btn-back:hover {
+            background: linear-gradient(135deg, var(--blue-hover) 0%, var(--blue-primary) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(30, 136, 229, 0.4);
+        }
+
+        .btn-back i {
+            margin-right: 8px;
+        }
+
+        /* Animation pour le formulaire */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            animation: slideUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Animation pour le bouton de retour */
+        .btn-back {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(30, 136, 229, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(30, 136, 229, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(30, 136, 229, 0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            textarea, input[type="email"] {
+                padding: 10px;
+            }
+
+            button[type="submit"] {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
+
 <div class="container">
     <h1>Postuler à l'Offre : <span th:text="${offre.titre}"></span></h1>
 
@@ -16,34 +247,59 @@
 
         <!-- Lettre de motivation -->
         <div class="form-group">
-            <label for="lettreMotivation">Lettre de Motivation :</label>
+            <label for="lettreMotivation"><i class="fas fa-pen-fancy"></i> Lettre de Motivation :</label>
             <textarea name="lettreMotivation" id="lettreMotivation" rows="5" placeholder="Écrivez votre lettre de motivation ici..." required></textarea>
         </div>
 
         <!-- CV -->
         <div class="form-group">
-            <label for="cv">Télécharger votre CV :</label>
-            <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx" required/>
+            <label for="cv"><i class="fas fa-file-alt"></i> Télécharger votre CV :</label>
+            <div class="file-upload">
+                <input type="file" name="cv" id="cv" accept=".pdf,.doc,.docx" required/>
+                <div class="file-upload-label">
+                    <i class="fas fa-cloud-upload-alt"></i> Choisir un fichier
+                </div>
+                <span class="file-name" id="file-name">Aucun fichier choisi</span>
+            </div>
         </div>
 
         <!-- Email du candidat -->
         <div class="form-group">
-            <label for="emailCandidat">Votre Email :</label>
+            <label for="emailCandidat"><i class="fas fa-envelope"></i> Votre Email :</label>
             <input type="email" name="emailCandidat" id="emailCandidat" placeholder="Votre email" required/>
         </div>
 
         <!-- Bouton de soumission -->
         <div class="form-group">
-            <button type="submit">Postuler</button>
+            <button type="submit"><i class="fas fa-paper-plane"></i> Postuler</button>
         </div>
     </form>
 
     <div class="back-link">
-        <a href="/offres">Retour aux Offres</a>
+        <a href="/offres" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Retour aux Offres
+        </a>
     </div>
 </div>
 
-<!-- Optionnel: Ajouter des scripts JS ici -->
-<script src="/js/script.js"></script>
+<script>
+    // Script pour afficher le nom du fichier sélectionné
+    document.getElementById('cv').addEventListener('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : 'Aucun fichier choisi';
+        document.getElementById('file-name').textContent = fileName;
+    });
+
+    // Animation lors du focus sur les champs
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.01)';
+        });
+        input.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+</script>
+
 </body>
 </html>

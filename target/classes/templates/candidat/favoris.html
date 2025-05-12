@@ -2,35 +2,322 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes offres favorites</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #ff6600;
+            --light-color: #f0f8ff;
+            --dark-color: #333333;
+            --gradient-bg: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+        }
+
+        body {
+            background: var(--gradient-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        .header-section {
+            background-color: white;
+            padding: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 3rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 50px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .page-title:hover::after {
+            width: 100px;
+        }
+
+        .heart-icon {
+            color: #ff4d6d;
+            animation: heartbeat 1.5s infinite;
+            font-size: 1.2em;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .card {
+            border-radius: 16px;
+            overflow: hidden;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 20px rgba(0, 0, 100, 0.08);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            background: white;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            border-radius: 16px 0 0 16px;
+            z-index: -1;
+            transition: width 0.3s ease;
+        }
+
+        .card:hover::before {
+            width: 10px;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(0, 0, 100, 0.12);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            border-bottom: 2px dashed rgba(0, 102, 204, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .card-text {
+            color: var(--dark-color);
+            margin-bottom: 1.8rem;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0.6rem 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #005bb5;
+            border-color: #005bb5;
+            box-shadow: 0 6px 12px rgba(0, 102, 204, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(3px);
+        }
+
+        .btn-danger {
+            background-color: white;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        .btn-danger:hover {
+            background-color: #dc3545;
+            color: white;
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-danger:hover i {
+            transform: rotate(90deg);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e65c00;
+            border-color: #e65c00;
+            box-shadow: 0 6px 12px rgba(255, 102, 0, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary:hover i {
+            transform: translateX(-3px);
+        }
+
+        .alert-info {
+            background-color: white;
+            color: var(--primary-color);
+            border-color: rgba(0, 102, 204, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-info i {
+            font-size: 3rem;
+            color: rgba(0, 102, 204, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+            z-index: 100;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .company-info span {
+            display: flex;
+            align-items: center;
+            margin-right: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .company-info i {
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 768px) {
+            .card-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container mt-5">
-    <h2 class="mb-4 text-center">💖 Mes offres favorites</h2>
+<div class="header-section">
+    <div class="container">
+        <h2 class="text-center page-title animate__animated animate__fadeIn">
+            <span class="heart-icon"><i class="fas fa-heart"></i></span>Mes offres favorites
+        </h2>
+    </div>
+</div>
 
-    <div th:if="${favoris.isEmpty()}" class="alert alert-info text-center">
-        Vous n'avez ajouté aucune offre aux favoris pour le moment.
+<div class="container">
+    <div th:if="${favoris.isEmpty()}" class="empty-state">
+        <div class="alert alert-info animate__animated animate__fadeIn">
+            <i class="fas fa-bookmark"></i>
+            <p>Vous n'avez ajouté aucune offre aux favoris pour le moment.</p>
+            <a href="/offres" class="btn btn-primary mt-3">
+                <i class="fas fa-search"></i> Découvrir les offres
+            </a>
+        </div>
     </div>
 
-    <div class="row" th:each="favori : ${favoris}">
-        <div class="col-md-8 offset-md-2 mb-4">
-            <div class="card shadow-sm">
+    <div class="row" th:each="favori, iterStat : ${favoris}">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card shadow-sm animate__animated animate__fadeInUp" th:style="'animation-delay: ' + ${iterStat.index * 0.2} + 's'">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${favori.offre.titre}">Titre</h5>
-                    <p class="card-text" th:text="${favori.offre.description}">Description</p>
+                    <h5 class="card-title" th:text="${favori.offre.titre}">Développeur full stack</h5>
 
-                    <div class="d-flex justify-content-between">
+                    <div class="company-info">
+                        <span><i class="fas fa-building"></i> Atos</span>
+                        <span><i class="fas fa-map-marker-alt"></i> Casablanca</span>
+                        <span><i class="fas fa-briefcase"></i> Stage</span>
+                    </div>
+
+                    <p class="card-text" th:text="${favori.offre.description}">En tant que Développeur Full Stack, vous serez responsable de la conception, du développement et de la maintenance d'applications web complètes, en intervenant à la fois sur la partie frontend (interface utilisateur) et backend (logique serveur, base de données). Vous collaborerez avec l'équipe produit, les designers et les autres développeurs pour proposer des solutions efficaces, performantes et évolutives.</p>
+
+                    <div class="card-actions">
                         <!-- Lien vers les détails -->
                         <a th:href="@{/candidat/favoris/detail/{id}(id=${favori.offre.id})}" class="btn btn-primary">
-                            🔍 Voir les détails
+                            <i class="fas fa-search"></i> Voir les détails
                         </a>
 
                         <!-- Bouton pour retirer des favoris -->
                         <form th:action="@{/candidat/favoris/supprimer/{id}(id=${favori.offre.id})}" method="post">
-                            <button type="submit" class="btn btn-outline-danger">
-                                ❌ Retirer des favoris
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-times"></i> Retirer des favoris
                             </button>
                         </form>
                     </div>
@@ -38,12 +325,36 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Lien retour -->
-    <div class="text-center mt-4">
-        <a th:href="@{/candidat/toutes-offres}" class="btn btn-secondary">← Retour à la liste des offres</a>
+<!-- Lien retour - Fixed au bas de l'écran pour une meilleure UX -->
+<div class="footer-actions">
+    <div class="container">
+        <div class="text-center animate__animated animate__fadeIn">
+            <a href="candidat/offres" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste des offres
+            </a>
+        </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Animation pour les éléments lors du défilement
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__fadeInUp');
+                    entry.target.style.opacity = 1;
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+    });
+</script>
 </body>
 </html>
