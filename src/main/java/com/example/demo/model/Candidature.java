@@ -52,3 +52,5 @@ public class Candidature {
     @Column(nullable = false)
     private Boolean vueParRecruteur = false;
 }
+
+

@@ -1,60 +1,424 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entretiens programmés</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
   <style>
+    :root {
+      --primary: #1a73e8;
+      --primary-light: #e8f0fe;
+      --primary-dark: #0d47a1;
+      --accent: #ff6b00;
+      --accent-light: #fff0e6;
+      --gray-50: #f9fafb;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.03);
+      --radius: 8px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--gray-100);
+      color: var(--gray-800);
+      line-height: 1.5;
+      display: flex;
+      min-height: 100vh;
     }
-    h2 {
-      color: #333;
+
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%);
+      height: 100vh;
+      position: fixed;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
     }
-    table {
+
+    .sidebar-header {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-menu {
+      list-style: none;
+      padding: 0;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      border-radius: var(--radius);
+      transition: var(--transition);
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .nav-link i {
+      font-size: 1.25rem;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border-radius: var(--radius);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
       width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      transform: rotate(30deg);
+      animation: shimmer 8s infinite linear;
     }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: left;
+
+    @keyframes shimmer {
+      0% { transform: rotate(30deg) translateX(0); }
+      100% { transform: rotate(30deg) translateX(30%); }
     }
-    th {
-      background-color: #f2f2f2;
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      color: white;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .date-filter {
+      background: white;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .date-filter input {
+      padding: 0.5rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+    }
+
+    .interview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .interview-card {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: var(--transition);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .interview-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .interview-header {
+      background: var(--primary-light);
+      padding: 1rem;
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .interview-date {
+      font-weight: 500;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .nav-link.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+
+    .interview-content {
+      padding: 1rem;
+    }
+
+    .interview-detail {
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .detail-label {
+      font-weight: 500;
+      color: var(--gray-700);
+      min-width: 80px;
+    }
+
+    .zoom-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-weight: 500;
+      transition: var(--transition);
+      gap: 0.5rem;
+    }
+
+    .zoom-link:hover {
+      background: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .no-interviews {
+      background: white;
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .no-interviews-text {
+      font-size: 1.125rem;
+      color: var(--gray-600);
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 80px;
+        padding: 1rem 0.5rem;
+      }
+
+      .logo span,
+      .nav-link span {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 80px;
+      }
+
+      .interview-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <a href="#" class="logo">
+      <i class="bi bi-building"></i>
+      <span>SH-RECRUIT</span>
+    </a>
+  </div>
 
-<h2>Entretiens programmés avec vos candidats</h2>
+  <nav>
+    <ul class="nav-menu">
+      <li>
+        <a href="#" class="nav-link">
+          <i class="bi bi-speedometer2"></i>
+          <span>Tableau de bord</span>
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/recruteur/offres/nouvelle}" class="nav-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Créer une offre</span>
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/recruteur/offres/mes-offres}" class="nav-link">
+          <i class="bi bi-briefcase"></i>
+          <span>Mes offres</span>
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/recruteur/candidatures}" class="nav-link">
+          <i class="bi bi-people"></i>
+          <span>Candidatures</span>
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/recruteur/entretiens}" class="nav-link active">
+          <i class="bi bi-chat-dots"></i>
+          <span>Entretiens</span>
+        </a>
+      </li>
+      <li>
+        <a href="/recruteur/profil" class="nav-link">
+          <i class="bi bi-person"></i>
+          <span>Mon profil</span>
+        </a>
+      </li>
+      <li>
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="nav-link" style="width: 100%; border: none; background: none; cursor: pointer; text-align: left;">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Déconnexion</span>
+          </button>
+        </form>
+      </li>
+    </ul>
+  </nav>
+</aside>
 
-<div th:if="${#lists.isEmpty(entretiens)}">
-  <p>Aucun entretien programmé pour l’instant.</p>
-</div>
+<main class="main-content">
+  <div class="header">
+    <div class="header-content">
+      <h1>Entretiens programmés</h1>
+    </div>
+  </div>
 
-<table th:if="${not #lists.isEmpty(entretiens)}">
-  <thead>
-  <tr>
-    <th>Date et Heure</th>
-    <th>Candidat</th>
-    <th>Titre de l'offre</th>
-    <th>Lien Zoom</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="entretien : ${entretiens}">
-    <td th:text="${#temporals.format(entretien.dateEntretien, 'EEEE dd MMMM yyyy à HH:mm')}">Date</td>
-    <td th:text="${entretien.candidature.candidat.nom + ' ' + entretien.candidature.candidat.prenom}">Candidat</td>
-    <td th:text="${entretien.candidature.offre.titre}">Offre</td>
-    <td>
-      <a th:if="${entretien.lienZoom != null}" th:href="${entretien.lienZoom}" target="_blank">Lien</a>
-      <span th:if="${entretien.lienZoom == null}">Non défini</span>
-    </td>
-  </tr>
-  </tbody>
-</table>
+  <div class="date-filter">
+    <input type="date" id="startDate" onchange="filterInterviews()">
+    <input type="date" id="endDate" onchange="filterInterviews()">
+  </div>
 
+  <div th:if="${#lists.isEmpty(entretiens)}" class="no-interviews">
+    <i class="bi bi-calendar-x" style="font-size: 3rem; color: var(--gray-400);"></i>
+    <p class="no-interviews-text">Aucun entretien programmé pour l'instant.</p>
+  </div>
+
+  <div th:if="${not #lists.isEmpty(entretiens)}" class="interview-grid">
+    <div th:each="entretien : ${entretiens}" class="interview-card" th:data-date="${#temporals.format(entretien.dateEntretien, 'yyyy-MM-dd')}">
+      <div class="interview-header">
+        <div class="interview-date">
+          <i class="bi bi-calendar-event"></i>
+          <span th:text="${#temporals.format(entretien.dateEntretien, 'EEEE dd MMMM yyyy à HH:mm')}">Date</span>
+        </div>
+      </div>
+      <div class="interview-content">
+        <div class="interview-detail">
+          <i class="bi bi-person"></i>
+          <span class="detail-label">Candidat:</span>
+          <span th:text="${entretien.candidature.candidat.nom + ' ' + entretien.candidature.candidat.prenom}">Candidat</span>
+        </div>
+        <div class="interview-detail">
+          <i class="bi bi-briefcase"></i>
+          <span class="detail-label">Poste:</span>
+          <span th:text="${entretien.candidature.offre.titre}">Offre</span>
+        </div>
+        <div class="interview-detail">
+          <i class="bi bi-camera-video"></i>
+          <span class="detail-label">Zoom:</span>
+          <span>
+              <a th:if="${entretien.lienZoom != null}" th:href="${entretien.lienZoom}" target="_blank" class="zoom-link">
+                <i class="bi bi-box-arrow-up-right"></i>
+                Rejoindre
+              </a>
+              <span th:if="${entretien.lienZoom == null}" class="text-gray-500">Non défini</span>
+            </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  function filterInterviews() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const cards = document.querySelectorAll('.interview-card');
+
+    cards.forEach(card => {
+      const cardDate = card.getAttribute('data-date');
+
+      if (!startDate && !endDate) {
+        card.style.display = 'block';
+        return;
+      }
+
+      if ((!startDate || cardDate >= startDate) && (!endDate || cardDate <= endDate)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Apply staggered animation to interview cards
+  document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.interview-card');
+    cards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.1}s`;
+    });
+  });
+</script>
 </body>
 </html>

@@ -257,6 +257,12 @@
     .nav-item {
         margin-bottom: 0.5rem;
     }
+    .nav-link.active {
+        background: var(--accent);
+        color: white;
+        box-shadow: var(--shadow);
+    }
+
 
     .nav-link {
         display: flex;
@@ -427,6 +433,8 @@
         width: 120px;
         margin-right: 15px;
     }
+
+
 </style>
 </head>
 <body>
@@ -442,25 +450,25 @@
     <nav>
         <ul class="nav-menu">
             <li class="nav-item">
-                <a href="#"  class="nav-link active">
+                <a href="#" class="nav-link active">
                     <i class="bi bi-speedometer2"></i>
                     Tableau de bord
                 </a>
             </li>
             <li class="nav-item">
-                <a  th:href="@{/recruteur/offres/nouvelle}" class="nav-link">
+                <a th:href="@{/recruteur/offres/nouvelle}" class="nav-link">
                     <i class="bi bi-briefcase"></i>
                     Créer une nouvelle offre
                 </a>
             </li>
             <li class="nav-item">
-                <a  th:href="@{/recruteur/offres/mes-offres}" class="nav-link ">
+                <a th:href="@{/recruteur/offres/mes-offres}" class="nav-link">
                     <i class="bi bi-briefcase"></i>
                     Mes offres
                 </a>
             </li>
             <li class="nav-item">
-                <a th:href="@{/recruteur/candidatures}" class="nav-link">
+                <a th:href="@{/recruteur/candidatures}" class="nav-link active">
                     <i class="bi bi-people"></i>
                     Candidatures
                 </a>
@@ -508,7 +516,7 @@
         <!-- Tableau dynamique -->
         <div class="table-responsive">
             <table id="candidatureTable" class="table table-bordered table-hover align-middle">
-                <thead class="table-dark">
+                <thead class="table-primary">
                 <tr>
                     <th>Offre</th>
                     <th>Candidat</th>
@@ -564,11 +572,8 @@
             </table>
         </div>
     </div>
-    </div>
-
-
-</div>
 </main>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
@@ -586,7 +591,6 @@
         });
     });
 </script>
-
 
 <script>
     $(document).ready(function() {
@@ -611,7 +615,6 @@
         });
     });
 </script>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

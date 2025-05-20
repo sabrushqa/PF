@@ -33,6 +33,7 @@ public class RecruteurController {
     private final CandidatureRepository candidatureRepository;
     private final EntretienRepository entretienRepository;
 
+
     public RecruteurController(RecruteurService recruteurService,
                                CandidatureService candidatureService,
                                EntretienService entretienService,
@@ -80,7 +81,7 @@ public class RecruteurController {
 
         model.addAttribute("pieChartData", pieChartData);
 
-        model.addAttribute("totalOffres", totalOffres);
+        model.addAttribute( "totalOffres", totalOffres);
         model.addAttribute("totalCandidatures", totalCandidatures);
         model.addAttribute("totalAcceptées", totalAcceptees);
         model.addAttribute("totalRefusées", totalRefusees);

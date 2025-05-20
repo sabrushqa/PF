@@ -63,7 +63,7 @@ public class CandidatureService {
     public void modifierCandidature(Long id, String statut, double score) {
         Candidature candidature = getById(id);
         candidature.setStatut(statut);
-        candidature.setMatchingScore(score);  // Ajout d'un score pour la candidature
+       // candidature.setMatchingScore(score);  // Ajout d'un score pour la candidature
         candidatureRepository.save(candidature);
     }
     public List<Candidature> findAll() {

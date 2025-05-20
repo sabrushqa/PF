@@ -11,6 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
@@ -55,20 +57,24 @@ public class MatchingService {
         // Nouvelle pondération
         double finalScore = (keywordMatchScore * 0.5) + (sectorMatchScore * 0.3) + (experienceMatchScore * 0.2);
 
-// Amplification douce ajustée pour donner plus de poids aux correspondances
+        // Amplification douce ajustée pour donner plus de poids aux correspondances
         finalScore = Math.pow(finalScore / 100, 0.6) * 100;  // Augmentation plus marquée mais contrôlée
 
-// Arrondir à une décimale
-        finalScore = (Math.round(finalScore * 10) / 10.0)*1.5;
+        // Ne pas multiplier par 1.5 pour éviter de dépasser 100
+        BigDecimal bd = new BigDecimal(finalScore);
+        bd = bd.setScale(1, RoundingMode.HALF_UP);
+        finalScore = bd.doubleValue();
+
+        // S'assurer que le score ne dépasse pas 100
+        finalScore = Math.min(100.0, finalScore);
 
         // Journaliser les détails du matching pour le débogage
         logger.info("Matching score details for candidature {}: keywords={}, sector={}, experience={}, final={}",
                 candidature.getId(), keywordMatchScore, sectorMatchScore, experienceMatchScore, finalScore);
 
-// Mettre à jour le score dans la candidature
+        // Mettre à jour le score dans la candidature
         candidature.setMatchingScore(finalScore);
         candidatureService.save(candidature);
-
 
         return finalScore;
     }

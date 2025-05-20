@@ -1,92 +1,425 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr">
 <head>
     <title>Recommandations d'Offres</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        :root {
+            --primary-blue: #1E88E5;
+            --primary-blue-light: #64B5F6;
+            --primary-blue-dark: #1565C0;
+            --secondary-orange: #FF9800;
+            --secondary-orange-light: #FFB74D;
+            --secondary-orange-dark: #F57C00;
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+            --mid-gray: #E0E0E0;
+            --dark-gray: #757575;
+            --black: #333333;
+            --error: #F44336;
+            --border-radius: 8px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.15);
+            --transition: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+            color: var(--black);
             line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
         }
+
         h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
+            color: var(--primary-blue-dark);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out;
         }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-orange) 100%);
+            border-radius: 2px;
+            animation: expandWidth 0.8s ease-out;
+        }
+
+        @keyframes expandWidth {
+            from { width: 0; }
+            to { width: 120px; }
+        }
+
         .offer-card {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border-left: 4px solid var(--primary-blue);
+            animation: slideIn 0.6s ease-out backwards;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
         }
+
+        .offer-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-blue-light) 0%, var(--secondary-orange-light) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: var(--shadow-lg);
+            border-left-color: var(--secondary-orange);
+        }
+
+        .offer-card:hover::before {
+            opacity: 0.05;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .offer-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #3498db;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue-dark);
+            margin-bottom: 12px;
+            transition: var(--transition);
+            position: relative;
         }
+
+        .offer-card:hover .offer-title {
+            color: var(--secondary-orange-dark);
+            transform: translateX(5px);
+        }
+
         .offer-sector {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 10px;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: var(--white);
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+            padding: 6px 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            transition: var(--transition);
+            box-shadow: 0 2px 4px rgba(30, 136, 229, 0.2);
         }
+
+        .offer-card:hover .offer-sector {
+            background: linear-gradient(90deg, var(--secondary-orange) 0%, var(--secondary-orange-light) 100%);
+            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+            transform: translateX(5px);
+        }
+
         .offer-description {
-            font-size: 14px;
-            color: #34495e;
+            font-size: 1.05rem;
+            color: var(--dark-gray);
+            margin-bottom: 25px;
+            line-height: 1.7;
+            transition: var(--transition);
         }
+
         .offer-score {
-            font-size: 14px;
-            color: #e74c3c;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 10px;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .score-bar {
+            flex-grow: 1;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--secondary-orange) 100%);
+            transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .score-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+            rgba(255,255,255,0) 0%,
+            rgba(255,255,255,0.3) 50%,
+            rgba(255,255,255,0) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+
+        .score-text {
+            font-weight: 600;
+            color: var(--secondary-orange-dark);
+            min-width: 60px;
             text-align: right;
+            font-size: 1.1rem;
         }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            text-align: center;
+            margin-right: 0;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .button:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .button-primary {
+            background: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 2px 4px rgba(30, 136, 229, 0.2);
+        }
+
+        .button-primary:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(30, 136, 229, 0.3);
+        }
+
+        .button-secondary {
+            background: var(--secondary-orange);
+            color: var(--white);
+            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+        }
+
+        .button-secondary:hover {
+            background: var(--secondary-orange-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+        }
+
         .message {
-            padding: 10px;
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            color: #721c24;
+            padding: 20px;
+            background-color: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            border-radius: var(--border-radius);
+            color: var(--error);
+            margin-bottom: 25px;
+            animation: fadeInUp 0.5s ease-out;
+            box-shadow: 0 2px 4px rgba(244, 67, 54, 0.1);
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .debug-info {
-            margin-top: 30px;
-            padding: 10px;
-            background-color: #f1f1f1;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 12px;
+            margin-top: 50px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            box-shadow: var(--shadow-sm);
+            border-top: 3px solid var(--primary-blue-light);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .offer-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .offers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 25px;
+            }
+
+            .offer-card {
+                padding: 20px;
+            }
+
+            .offer-title {
+                font-size: 1.3rem;
+            }
+
+            .offers-grid {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+            }
+
+            .offer-actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
         }
     </style>
 </head>
 <body>
 
-<h1>Recommandations d'Offres pour le Candidat</h1>
+<h1>Recommandations d'Offres pour  vous !</h1>
 
-<!-- Afficher un message d'erreur s'il y en a un -->
 <div th:if="${error != null}" class="message">
     <p th:text="${error}"></p>
 </div>
 
-<!-- Afficher un message si aucune offre n'est recommandée -->
 <div th:if="${message != null}" class="message">
     <p th:text="${message}"></p>
+    <a href="/candidat/profil" class="nav-link">
+        <i class="bi bi-person"> Creer un profile</i>
+    </a>
 </div>
 
-<!-- Afficher les offres recommandées -->
-<div th:if="${offres != null and !offres.isEmpty()}">
-    <div th:each="offre : ${offres}" class="offer-card">
+<div th:if="${offres != null and !offres.isEmpty()}" class="offers-grid">
+    <div th:each="offre, iterStat : ${offres}" class="offer-card" th:style="'animation-delay: ' + ${iterStat.index * 0.1} + 's'">
         <div class="offer-title" th:text="${offre.titre}">Titre de l'offre</div>
         <div class="offer-sector" th:text="'Secteur: ' + ${offre.secteur}">Secteur</div>
         <div class="offer-description" th:text="${offre.description}">Description</div>
-        <div class="offer-score" th:text="'Score de correspondance: ' + ${#numbers.formatDecimal(offre.matchScore * 100, 0, 2)} + '%'">Score</div>
+        <div class="offer-score">
+            <div class="score-bar">
+                <div class="score-fill" th:style="'width: ' + ${offre.matchScore * 100} + '%'"></div>
+            </div>
+            <div class="score-text" th:text="${#numbers.formatDecimal(offre.matchScore * 100, 0, 2)} + '%'">Score</div>
+        </div>
+
+        <div class="offer-actions">
+            <a th:href="@{/offres/{id}(id=${offre.id})}" class="button button-primary">Voir les détails</a>
+
+            <form th:action="@{/candidat/favoris/ajouter/{id}(id=${offre.id})}" method="post" style="display:inline;">
+                <button type="submit" class="button button-secondary">Ajouter aux favoris</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Si la liste des offres est vide -->
 <div th:if="${offres == null or offres.isEmpty()}" class="message">
     <p>Aucune offre recommandée n'a été trouvée pour ce profil. Veuillez compléter votre profil ou réessayer plus tard.</p>
 </div>
 
-<!-- Informations de débogage (à retirer en production) -->
 <div class="debug-info">
     <p>ID candidat: <span th:text="${candidatId}">-</span></p>
     <p>Nombre d'offres: <span th:text="${offres != null ? offres.size() : 0}">0</span></p>
