@@ -39,6 +39,7 @@
       --radius-lg: 0.75rem;
     }
 
+
     * {
       margin: 0;
       padding: 0;
@@ -147,6 +148,288 @@
 
     .page-title i {
       color: var(--accent);
+    }
+    .interview-prep-section {
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .interview-prep-section:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--gray-200);
+      background: linear-gradient(to right, var(--primary-light), var(--primary));
+      color: white;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title i {
+      color: var(--accent-light);
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--gray-200);
+      background-color: var(--gray-50);
+    }
+
+    .tab {
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      text-align: center;
+      flex: 1;
+    }
+
+    .tab:hover {
+      color: var(--primary);
+      background-color: var(--gray-100);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      background-color: white;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 1.5rem;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Styles spécifiques par onglet */
+    /* Checklist */
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      background-color: var(--gray-50);
+      transition: all 0.2s ease;
+    }
+
+    .checklist-item:hover {
+      background-color: var(--gray-100);
+    }
+
+    .checklist-item.checked {
+      background-color: rgba(76, 175, 80, 0.1);
+    }
+
+    .checklist-item input {
+      margin-right: 1rem;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .checklist-item label {
+      flex: 1;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .checklist-item.checked label {
+      text-decoration: line-through;
+      color: var(--gray-500);
+    }
+
+    /* Questions */
+    .question-card {
+      background-color: white;
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .question-card:hover {
+      border-color: var(--primary-light);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .question-card h4 {
+      padding: 1rem;
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .question-card h4::after {
+      content: '\F282';
+      font-family: 'bootstrap-icons';
+      color: var(--gray-500);
+      transition: transform 0.3s ease;
+    }
+
+    .question-card.expanded h4::after {
+      transform: rotate(180deg);
+      color: var(--primary);
+    }
+
+    .answer {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border-top: 0 solid var(--gray-200);
+    }
+
+    .question-card.expanded .answer {
+      padding: 1rem;
+      max-height: 500px;
+      border-top: 1px solid var(--gray-200);
+      background-color: var(--gray-50);
+    }
+
+    /* Conseils */
+    .tips-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .tips-list li {
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: var(--gray-50);
+      border-radius: var(--radius);
+      border-left: 4px solid var(--primary);
+      transition: transform 0.2s ease;
+    }
+
+    .tips-list li:hover {
+      transform: translateX(5px);
+      background-color: rgba(0, 102, 204, 0.05);
+    }
+
+    /* Simulateur */
+    .simulator-container {
+      background-color: var(--gray-50);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .simulator-question {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      font-weight: 600;
+      color: var(--gray-800);
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+
+    .simulator-container textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 1rem;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius);
+      margin-bottom: 1.5rem;
+      resize: vertical;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .simulator-container textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+    }
+
+    .simulator-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .timer {
+      font-weight: 600;
+      color: var(--gray-700);
+      background-color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .simulator-btn {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-left: 1rem;
+    }
+
+    .simulator-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .simulator-btn:disabled {
+      background-color: var(--gray-400);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #start-btn {
+      background-color: var(--accent);
+    }
+
+    #start-btn:hover {
+      background-color: var(--accent-dark);
     }
 
     .status {
@@ -802,7 +1085,6 @@
               </span>
           </button>
           <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="notificationsDropdown" style="min-width: 300px;">
-            <!-- Nouvelles réponses aux candidatures -->
             <li class="dropdown-header text-primary fw-bold">
               Nouvelles réponses
             </li>
@@ -831,7 +1113,6 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="/candidat/profil"><i class="bi bi-person me-2"></i>Mon profil</a></li>
-            <li><a class="dropdown-item" href="/candidat/parametres"><i class="bi bi-gear me-2"></i>Paramètres</a></li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <form th:action="@{/logout}" method="post">
@@ -854,24 +1135,6 @@
       <p class="profile-title" th:text="${candidat.specialite}">Développeur Full Stack</p>
     </div>
 
-    <div class="profile-stats">
-      <div class="profile-stat">
-        <div class="profile-stat-value" th:text="${candidaturesCount ?: 0}">12</div>
-        <div class="profile-stat-label">Candidatures</div>
-      </div>
-      <div class="profile-stat">
-        <div class="profile-stat-value" th:text="${entretiensPrevus ?: 0}">3</div>
-        <div class="profile-stat-label">Entretiens prévus</div>
-      </div>
-      <div class="profile-stat">
-        <div class="profile-stat-value" th:text="${favorisCount ?: 0}">5</div>
-        <div class="profile-stat-label">Favoris</div>
-      </div>
-      <div class="profile-stat">
-        <div class="profile-stat-value" th:text="${candidatureAcceptees ?: 0}">2</div>
-        <div class="profile-stat-label">Candidatures acceptées</div>
-      </div>
-    </div>
 
     <div class="profile-body">
       <div class="row">
@@ -918,296 +1181,211 @@
     </div>
   </div>
 
-  <!-- Stats Cards -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-      <div class="dashboard-card">
-        <div class="card-body text-center">
-          <div class="stat-icon icon-primary mx-auto mb-3">
-            <i class="bi bi-search"></i>
-          </div>
-          <h5 class="card-title text-center mb-2">Offres consultées</h5>
-          <div class="stat-value" th:text="${offresConsultees ?: 0}">24</div>
-          <p class="text-muted mb-0">Cette semaine</p>
+  <div class="interview-prep-section">
+    <div class="section-header">
+      <h2 class="section-title">Préparation aux entretiens</h2>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="checklist">Checklist</div>
+      <div class="tab" data-tab="questions">Questions fréquentes</div>
+      <div class="tab" data-tab="tips">Conseils</div>
+      <div class="tab" data-tab="simulator">Simulateur</div>
+    </div>
+
+    <div class="tab-content active" id="checklist">
+      <div class="checklist-item">
+        <input type="checkbox" id="check1">
+        <label for="check1">Rechercher l'entreprise et comprendre ses valeurs</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check2">
+        <label for="check2">Préparer une présentation personnelle de 2-3 minutes</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check3">
+        <label for="check3">Identifier des exemples concrets de réalisations</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check4">
+        <label for="check4">Préparer des questions à poser au recruteur</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check5">
+        <label for="check5">Vérifier l'itinéraire et le temps de trajet</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check6">
+        <label for="check6">Préparer ma tenue professionnelle</label>
+      </div>
+      <div class="checklist-item">
+        <input type="checkbox" id="check7">
+        <label for="check7">Avoir des copies imprimées de mon CV</label>
+      </div>
+    </div>
+
+    <div class="tab-content" id="questions">
+      <div class="question-card">
+        <h4>Parlez-moi de vous</h4>
+        <div class="answer">
+          <p>Cette question ouverte est souvent la première posée. Préparez un résumé de 2-3 minutes qui présente votre parcours, vos compétences clés et ce qui vous motive dans ce poste. Évitez de simplement lister votre CV et concentrez-vous sur les éléments pertinents pour le poste.</p>
+        </div>
+      </div>
+      <div class="question-card">
+        <h4>Pourquoi êtes-vous intéressé(e) par ce poste?</h4>
+        <div class="answer">
+          <p>Montrez que vous avez fait des recherches sur l'entreprise et le poste. Expliquez comment vos compétences correspondent aux besoins de l'entreprise et pourquoi la mission ou les valeurs de l'entreprise vous attirent.</p>
+        </div>
+      </div>
+      <div class="question-card">
+        <h4>Quelles sont vos principales forces et faiblesses?</h4>
+        <div class="answer">
+          <p>Pour les forces, choisissez des qualités pertinentes pour le poste et donnez des exemples concrets. Pour les faiblesses, soyez honnête mais choisissez quelque chose que vous travaillez activement à améliorer, et expliquez les mesures que vous prenez.</p>
+        </div>
+      </div>
+      <div class="question-card">
+        <h4>Décrivez une situation difficile et comment vous l'avez gérée</h4>
+        <div class="answer">
+          <p>Utilisez la méthode STAR : Situation, Tâche, Action, Résultat. Décrivez brièvement le contexte, expliquez votre rôle, détaillez les actions que vous avez prises et terminez par les résultats obtenus et les leçons apprises.</p>
+        </div>
+      </div>
+      <div class="question-card">
+        <h4>Où vous voyez-vous dans 5 ans?</h4>
+        <div class="answer">
+          <p>Montrez votre ambition et votre motivation tout en restant réaliste. Expliquez comment ce poste s'inscrit dans votre plan de carrière et comment vous souhaitez évoluer au sein de l'entreprise.</p>
         </div>
       </div>
     </div>
 
-
-    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-      <div class="dashboard-card">
-        <div class="card-body text-center">
-          <div class="stat-icon icon-accent mx-auto mb-3">
-            <i class="bi bi-file-earmark-text"></i>
-          </div>
-          <h5 class="card-title text-center mb-2">Candidatures actives</h5>
-          <div class="stat-value" th:text="${candidaturesActives ?: 0}">5</div>
-          <p class="text-muted mb-0">En cours d'évaluation</p>
-        </div>
-      </div>
+    <div class="tab-content" id="tips">
+      <ul class="tips-list">
+        <li><strong>Arrivez 10-15 minutes en avance</strong> - Cela montre votre ponctualité et vous permet de vous acclimater.</li>
+        <li><strong>Maintenez un bon contact visuel</strong> - Cela démontre votre confiance et votre attention.</li>
+        <li><strong>Utilisez la méthode STAR</strong> pour structurer vos réponses aux questions comportementales.</li>
+        <li><strong>Préparez des questions pertinentes</strong> à poser au recruteur sur l'entreprise, l'équipe ou le poste.</li>
+        <li><strong>Adaptez vos réponses au poste et à l'entreprise</strong> - Montrez comment votre expérience répond spécifiquement à leurs besoins.</li>
+        <li><strong>Envoyez un email de remerciement</strong> dans les 24 heures suivant l'entretien.</li>
+        <li><strong>Pratiquez à voix haute</strong> vos réponses aux questions courantes avant l'entretien.</li>
+      </ul>
     </div>
 
-    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-      <div class="dashboard-card">
-        <div class="card-body text-center">
-          <div class="stat-icon icon-success mx-auto mb-3">
-            <i class="bi bi-check-circle"></i>
-          </div>
-          <h5 class="card-title text-center mb-2">Candidatures acceptées</h5>
-          <div class="stat-value" th:text="${candidatureAcceptees ?: 0}">2</div>
-          <p class="text-muted mb-0">Total cette année</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
-      <div class="dashboard-card">
-        <div class="card-body text-center">
-          <div class="stat-icon icon-info mx-auto mb-3">
-            <i class="bi bi-calendar-check"></i>
-          </div>
-          <h5 class="card-title text-center mb-2">Entretiens à venir</h5>
-          <div class="stat-value" th:text="${entretiensPrevus ?: 0}">3</div>
-          <p class="text-muted mb-0">Prochains 7 jours</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Content Row -->
-  <div class="row g-4">
-    <!-- Recent Applications Column -->
-    <div class="col-lg-6" data-aos="fade-up">
-      <div class="dashboard-card">
-        <div class="card-header">
-          <h5 class="card-title">
-            <i class="bi bi-file-earmark-text me-2"></i>
-            Dernières candidatures
-          </h5>
-          <a href="/candidat/candidatures" class="btn btn-sm btn-outline">Voir tout</a>
-        </div>
-        <div class="card-body">
-          <ul class="offers-list">
-            <li class="offer-item" th:each="candidature : ${dernieresCandidatures}">
-              <a href="#">
-                <div class="offer-header">
-                  <h6 class="offer-title" th:text="${candidature.offre.titre}">Développeur Full Stack</h6>
-                  <span class="badge" th:classappend="${candidature.statut == 'EN_ATTENTE'} ? 'status-pending' :
-                                      ${candidature.statut == 'ACCEPTEE'} ? 'status-accepted' :
-                                      ${candidature.statut == 'REFUSEE'} ? 'status-rejected' :
-                                      ${candidature.statut == 'ENTRETIEN'} ? 'status-scheduled' : ''"
-                        th:text="${candidature.statut == 'EN_ATTENTE'} ? 'En attente' :
-                                  ${candidature.statut == 'ACCEPTEE'} ? 'Acceptée' :
-                                  ${candidature.statut == 'REFUSEE'} ? 'Refusée' :
-                                  ${candidature.statut == 'ENTRETIEN'} ? 'Entretien' : ''">
-                      En attente
-                    </span>
-                </div>
-                <div class="offer-body">
-                  <p class="offer-company" th:text="${candidature.offre.entreprise.nom}">Tech Solutions Inc.</p>
-                  <div class="offer-details">
-                      <span class="offer-detail">
-                        <i class="bi bi-geo-alt"></i>
-                        <span th:text="${candidature.offre.localisation}">Paris, France</span>
-                      </span>
-                    <span class="offer-detail">
-                        <i class="bi bi-briefcase"></i>
-                        <span th:text="${candidature.offre.typeContrat}">CDI</span>
-                      </span>
-                    <span class="offer-detail">
-                        <i class="bi bi-cash"></i>
-                        <span th:text="${candidature.offre.salaire} + '€/an'">45 000€/an</span>
-                      </span>
-                  </div>
-                </div>
-                <div class="offer-footer">
-                    <span class="offer-posted">
-                      <i class="bi bi-clock"></i>
-                      <span th:text="${#temporals.format(candidature.dateCandidature, 'dd/MM/yyyy')}">15/05/2023</span>
-                    </span>
-                  <button class="btn btn-sm btn-outline">Détails</button>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Upcoming Interviews Column -->
-    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-      <div class="dashboard-card">
-        <div class="card-header">
-          <h5 class="card-title">
-            <i class="bi bi-calendar-event me-2"></i>
-            Prochains entretiens
-          </h5>
-          <a href="/candidat/entretiens" class="btn btn-sm btn-outline">Voir tout</a>
-        </div>
-        <div class="card-body">
-          <ul class="interviews-list" th:if="${not #lists.isEmpty(prochainsEntretiens)}">
-            <li class="interview-item" th:each="entretien : ${prochainsEntretiens}">
-              <div class="interview-info">
-                <h6 class="interview-title" th:text="${entretien.candidature.offre.titre}">Développeur Frontend Senior</h6>
-                <p class="interview-company" th:text="${entretien.candidature.offre.entreprise.nom}">Digital Innovations</p>
-                <div class="interview-date">
-                  <i class="bi bi-clock"></i>
-                  <span th:text="${#temporals.format(entretien.dateHeure, 'dd/MM/yyyy HH:mm')}">25/05/2023 14:30</span>
-                  <span class="badge badge-primary ms-2" th:if="${entretien.mode == 'EN_LIGNE'}">En ligne</span>
-                  <span class="badge badge-accent ms-2" th:if="${entretien.mode == 'PRESENTIEL'}">Présentiel</span>
-                </div>
-              </div>
-              <div class="interview-actions">
-                <button class="btn btn-sm btn-outline">
-                  <i class="bi bi-info-circle"></i>
-                </button>
-                <button class="btn btn-sm btn-primary">
-                  <i class="bi bi-calendar-plus"></i>
-                </button>
-              </div>
-            </li>
-          </ul>
-          <div class="text-center py-4" th:if="${#lists.isEmpty(prochainsEntretiens)}">
-            <i class="bi bi-calendar-x text-muted" style="font-size: 2rem;"></i>
-            <p class="text-muted mt-2">Aucun entretien prévu</p>
-            <a href="/candidat/offres" class="btn btn-sm btn-primary mt-2">Postuler à des offres</a>
+    <div class="tab-content" id="simulator">
+      <div class="simulator-container">
+        <div class="simulator-question">Chargement de la question...</div>
+        <textarea placeholder="Tapez votre réponse ici..."></textarea>
+        <div class="simulator-controls">
+          <div class="timer">Temps: 00:00</div>
+          <div>
+            <button class="simulator-btn" id="start-btn">Commencer</button>
+            <button class="simulator-btn" id="next-btn" disabled>Question suivante</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Second Row - Charts and Activity -->
-  <div class="row g-4 mt-4">
-    <!-- Application Status Chart -->
-    <div class="col-lg-6" data-aos="fade-up">
-      <div class="dashboard-card">
-        <div class="card-header">
-          <h5 class="card-title">
-            <i class="bi bi-pie-chart me-2"></i>
-            Statut des candidatures
-          </h5>
-        </div>
-        <div class="card-body">
-          <div class="chart-container">
+  <script>
+    // Gestion des onglets
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-            <canvas id="applicationChart"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
 
-    <!-- Recent Activity -->
-    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-      <div class="dashboard-card">
-        <div class="card-header">
-          <h5 class="card-title">
-            <i class="bi bi-activity me-2"></i>
-            Activité récente
-          </h5>
-        </div>
-        <div class="card-body">
-          <div class="activity-item">
-            <div class="activity-icon">
-              <i class="bi bi-file-earmark-text"></i>
-            </div>
-            <div class="activity-content">
-              <h6 class="activity-title">Vous avez postulé à "Développeur Backend"</h6>
-              <p class="activity-time">Il y a 2 heures</p>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon" style="background-color: var(--accent);">
-              <i class="bi bi-check-circle"></i>
-            </div>
-            <div class="activity-content">
-              <h6 class="activity-title">Votre candidature pour "UX Designer" a été acceptée</h6>
-              <p class="activity-time">Hier, 15:32</p>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon" style="background-color: var(--primary-dark);">
-              <i class="bi bi-calendar-event"></i>
-            </div>
-            <div class="activity-content">
-              <h6 class="activity-title">Entretien programmé pour "Product Manager"</h6>
-              <p class="activity-time">Lundi, 10:00</p>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon">
-              <i class="bi bi-star"></i>
-            </div>
-            <div class="activity-content">
-              <h6 class="activity-title">Vous avez ajouté "Data Scientist" à vos favoris</h6>
-              <p class="activity-time">12/05/2023</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    // Gestion des items de la checklist
+    document.querySelectorAll('.checklist-item input').forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          checkbox.parentElement.classList.add('checked');
+          // Sauvegarder dans le localStorage
+          localStorage.setItem(checkbox.id, 'checked');
+        } else {
+          checkbox.parentElement.classList.remove('checked');
+          // Supprimer du localStorage
+          localStorage.removeItem(checkbox.id);
+        }
+      });
+
+      // Charger l'état depuis le localStorage
+      if (localStorage.getItem(checkbox.id) === 'checked') {
+        checkbox.checked = true;
+        checkbox.parentElement.classList.add('checked');
+      }
+    });
+
+    // Gestion des cartes de questions
+    document.querySelectorAll('.question-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('expanded');
+      });
+    });
+
+    // Simulateur d'entretien
+    const questions = [
+      "Parlez-moi de votre parcours professionnel.",
+      "Pourquoi souhaitez-vous rejoindre notre entreprise?",
+      "Décrivez une situation où vous avez dû résoudre un problème complexe.",
+      "Quelles sont vos principales qualités et défauts?",
+      "Comment gérez-vous le stress et les délais serrés?",
+      "Racontez-moi une situation où vous avez fait preuve de leadership.",
+      "Pourquoi devrions-nous vous choisir plutôt qu'un autre candidat?",
+      "Quelles sont vos prétentions salariales?",
+      "Avez-vous des questions à nous poser?"
+    ];
+
+    let currentQuestionIndex = 0;
+    let timerInterval;
+    let seconds = 0;
+
+    const startBtn = document.getElementById('start-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const questionElement = document.querySelector('.simulator-question');
+    const timerElement = document.querySelector('.timer');
+
+    // Afficher une question aléatoire
+    function displayRandomQuestion() {
+      currentQuestionIndex = Math.floor(Math.random() * questions.length);
+      questionElement.textContent = questions[currentQuestionIndex];
+    }
+
+    // Démarrer le simulateur
+    startBtn.addEventListener('click', () => {
+      if (startBtn.textContent === 'Commencer') {
+        displayRandomQuestion();
+        startBtn.textContent = 'Terminer';
+        nextBtn.disabled = false;
+
+        // Démarrer le timer
+        seconds = 0;
+        timerElement.textContent = 'Temps: 00:00';
+        timerInterval = setInterval(() => {
+          seconds++;
+          const minutes = Math.floor(seconds / 60);
+          const remainingSeconds = seconds % 60;
+          timerElement.textContent = `Temps: ${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }, 1000);
+      } else {
+        // Réinitialiser
+        clearInterval(timerInterval);
+        startBtn.textContent = 'Commencer';
+        nextBtn.disabled = true;
+        questionElement.textContent = 'Chargement de la question...';
+        document.querySelector('#simulator textarea').value = '';
+      }
+    });
+
+    // Passer à la question suivante
+    nextBtn.addEventListener('click', () => {
+      displayRandomQuestion();
+      document.querySelector('#simulator textarea').value = '';
+      seconds = 0;
+    });
+  </script>
   </div>
 </main>
-
-<!-- Bootstrap Bundle with Popper -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-<script>
-  // Initialize AOS animation
-  AOS.init({
-    duration: 800,
-    easing: 'ease-in-out',
-    once: true
-  });
-
-  // Application Status Chart
-  const applicationCtx = document.getElementById('applicationChart').getContext('2d');
-  const applicationChart = new Chart(applicationCtx, {
-    type: 'doughnut',
-    data: {
-      labels: ['En attente', 'Acceptées', 'Refusées', 'Entretiens'],
-      datasets: [{
-        data: [12, 2, 3, 3], // These values should come from your backend
-        backgroundColor: [
-          'rgba(255, 193, 7, 0.8)',
-          'rgba(76, 175, 80, 0.8)',
-          'rgba(244, 67, 54, 0.8)',
-          'rgba(33, 150, 243, 0.8)'
-        ],
-        borderColor: [
-          'rgba(255, 193, 7, 1)',
-          'rgba(76, 175, 80, 1)',
-          'rgba(244, 67, 54, 1)',
-          'rgba(33, 150, 243, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'right',
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              let label = context.label || '';
-              if (label) {
-                label += ': ';
-              }
-              label += context.raw + ' (' + Math.round(context.parsed * 100 / context.dataset.data.reduce((a, b) => a + b, 0)) + '%)';
-              return label;
-            }
-          }
-        }
-      },
-      cutout: '70%'
-    }
-  });
-
-  // You can add more chart initializations here if needed
-</script>
 </body>
 </html>

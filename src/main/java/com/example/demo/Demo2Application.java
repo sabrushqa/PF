@@ -17,5 +17,5 @@ Demo2Application {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-
 }
+
